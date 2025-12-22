@@ -1,7 +1,7 @@
 Citizen.CreateThread(function()
     local keyCooldowns = {}
     while true do
-        Wait(0) -- is mandatory to run every frame to be detected by game
+        Wait(1)
         for k, v in pairs(Config.Keys) do
             local currentTime = GetGameTimer()
             if not keyCooldowns[k] then keyCooldowns[k] = 0 end

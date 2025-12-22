@@ -3,8 +3,8 @@ Config = {}
 Config.Keys = {
     K = {
         hash = 0x4B,
-        callback = function()
-            ExecuteCommand('')
+        callback = function() -- example of command
+            ExecuteCommand('rc')
         end,
         wait = 1000,
         trigger = 'keyUp',
@@ -12,127 +12,80 @@ Config.Keys = {
     Y = {
         hash = 0x59,
         callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    J = { -- NOTE: this is a saltychat fix for wagons, adapt the callback to your needs
-        hash = 0x4A,
-        callback = function()
-            local function IsDrivingWagon()
-                local ped = PlayerPedId()
-                local veh = GetVehiclePedIsIn(ped, false)
-                if veh == 0 then 
-                    return false 
-                end
-                return true
+            --[[ TriggerServerEvent('') -- example of server event
+            TriggerEvent('') -- example of client event ]]
+            RequestAnimDict('ai_gestures@gen_female@standing@silent')
+            while not HasAnimDictLoaded('ai_gestures@gen_female@standing@silent') do
+                Wait(100)
             end
-            local function isOnMount()
-                local ped = PlayerPedId()
-                return IsPedOnMount(ped)
-            end
-            if not IsDrivingWagon() and not isOnMount() then
-                return
-            end
-            local saltyDefaultRanges = { 3.5, 8, 15, 32 }
-            local currentVoiceRange = exports["saltychat"]:GetVoiceRange()
-            local nextIndex = 1
-
-            for i = 1, #saltyDefaultRanges do
-                if saltyDefaultRanges[i] == currentVoiceRange then
-                    nextIndex = i + 1
-                    if nextIndex > #saltyDefaultRanges then
-                        nextIndex = 1
-                    end
-                    break
-                end
-            end
-
-            TriggerServerEvent("SaltyChat_SetVoiceRange", saltyDefaultRanges[nextIndex])
-        end,
-        wait = 200,
-        trigger = 'keyUp',
-    },
-    NUMPAD_1 = {
-        hash = 0x60,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_2 = {
-        hash = 0x61,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_3 = {
-        hash = 0x62,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_4 = {
-        hash = 0x63,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_5 = {
-        hash = 0x64,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_6 = {
-        hash = 0x65,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_7 = {
-        hash = 0x66,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_8 = {
-        hash = 0x67,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_9 = {
-        hash = 0x68,
-        callback = function()
-            TriggerEvent('')            
-        end,
-        wait = 1000,
-        trigger = 'keyUp',
-    },
-    NUMPAD_0 = {
-        hash = 0x69,
-        callback = function()
-            TriggerEvent('')            
+            TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_neutral_greet_f_002', 1.0, 1.0, -1, 1, 0, false, false, false, 0, true)
+            RemoveAnimDict('ai_gestures@gen_female@standing@silent')
         end,
         wait = 1000,
         trigger = 'keyUp',
     },
 }
+
+Config.customizableKeys = {
+    NUMPAD_1 = {
+        hash = 0x61,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_2 = {
+        hash = 0x62,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_3 = {
+        hash = 0x63,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_4 = {
+        hash = 0x64,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_5 = {
+        hash = 0x65,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_6 = {
+        hash = 0x66,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_7 = {
+        hash = 0x67,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_8 = {
+        hash = 0x68,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_9 = {
+        hash = 0x69,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+    NUMPAD_0 = {
+        hash = 0x60,
+        wait = 1000,
+        trigger = 'keyUp',
+    },
+}
+
+Config.actionsToBind = {
+    events = {
+        'moro_notifications:TipRight',
+    },
+    commands = {
+        'rc',
+    },
+}
+
 -- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

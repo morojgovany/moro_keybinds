@@ -11,3 +11,18 @@ client_script {
     'client.lua',
     'config.lua',
 }
+
+server_script {
+    'server.lua',
+	'@oxmysql/lib/MySQL.lua',
+}
+
+files {
+    'ui/*',
+    'ui/assets/*',
+    'ui/vendor/*',
+    'ui/fonts/*',
+    'ui/img/*',
+}
+
+ui_page 'ui/index.html'
