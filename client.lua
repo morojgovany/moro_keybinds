@@ -1,11 +1,26 @@
 Citizen.CreateThread(function()
+    local keyCooldowns = {}
     while true do
-        Wait(1)
+        Wait(0) -- is mandatory to run every frame to be detected by game
         for k, v in pairs(Config.Keys) do
-            if IsRawKeyReleased(v.hash) then
-                v.callback()
-                if v.wait and v.wait > 0 then
-                    Wait(v.wait)
+            local currentTime = GetGameTimer()
+            if not keyCooldowns[k] then keyCooldowns[k] = 0 end
+
+            if currentTime >= keyCooldowns[k] then
+                if v.trigger == 'keyUp' then
+                    if IsRawKeyReleased(v.hash) then
+                        v.callback()
+                        if v.wait and v.wait > 0 then
+                            keyCooldowns[k] = currentTime + v.wait
+                        end
+                    end
+                elseif v.trigger == 'keyDown' then
+                    if IsRawKeyPressed(v.hash) then
+                        v.callback()
+                        if v.wait and v.wait > 0 then
+                            keyCooldowns[k] = currentTime + v.wait
+                        end
+                    end
                 end
             end
         end

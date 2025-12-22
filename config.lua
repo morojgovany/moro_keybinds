@@ -7,6 +7,7 @@ Config.Keys = {
             ExecuteCommand('')
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     Y = {
         hash = 0x59,
@@ -14,6 +15,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     J = { -- NOTE: this is a saltychat fix for wagons, adapt the callback to your needs
         hash = 0x4A,
@@ -50,6 +52,7 @@ Config.Keys = {
             TriggerServerEvent("SaltyChat_SetVoiceRange", saltyDefaultRanges[nextIndex])
         end,
         wait = 200,
+        trigger = 'keyUp',
     },
     NUMPAD_1 = {
         hash = 0x60,
@@ -57,6 +60,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_2 = {
         hash = 0x61,
@@ -64,6 +68,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_3 = {
         hash = 0x62,
@@ -71,6 +76,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_4 = {
         hash = 0x63,
@@ -78,6 +84,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_5 = {
         hash = 0x64,
@@ -85,6 +92,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_6 = {
         hash = 0x65,
@@ -92,6 +100,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_7 = {
         hash = 0x66,
@@ -99,6 +108,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_8 = {
         hash = 0x67,
@@ -106,6 +116,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_9 = {
         hash = 0x68,
@@ -113,6 +124,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
     NUMPAD_0 = {
         hash = 0x69,
@@ -120,6 +132,7 @@ Config.Keys = {
             TriggerEvent('')            
         end,
         wait = 1000,
+        trigger = 'keyUp',
     },
 }
 -- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
