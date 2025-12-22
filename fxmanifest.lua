@@ -26,3 +26,7 @@ files {
 }
 
 ui_page 'ui/index.html'
+
+dependencies {
+    'oxmysql',
+}
