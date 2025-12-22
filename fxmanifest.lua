@@ -29,4 +29,10 @@ ui_page 'ui/index.html'
 
 dependencies {
     'oxmysql',
+    'jo_libs',
+}
+
+jo_libs {
+    'framework',
+    'database',
 }
