@@ -81,10 +81,10 @@ Config.customizableKeys = {
 
 Config.actionsToBind = {
     events = {
-        'moro_notifications:TipRight',
+        'Notification' = 'moro_notifications:TipRight',
     },
     commands = {
-        'rc',
+        'Reload skin' = 'rc',
     },
 }
 

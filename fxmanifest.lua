@@ -35,4 +35,5 @@ dependencies {
 jo_libs {
     'framework',
     'database',
+    'notification',
 }

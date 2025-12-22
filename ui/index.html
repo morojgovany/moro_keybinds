@@ -8,7 +8,26 @@
 <body>
     <div id="app">
         <div class="wrapper" v-show="visible">
-
+            <div class="header">
+                <h1>Keybinds</h1>
+                <button @click="closeMenu">Close</button>
+            </div>
+            <div class="content">
+                <div class="binds">
+                    <div class="bind" v-for="bind in binds" :key="bind.bind_key">
+                        <h2>{{ bind.bind_key }}</h2>
+                        <select v-model="bind.bind_event">
+                            <option v-for="bindEvent in optionList" :key="bindEvent" :value="bindEvent">
+                                {{ bindEvent }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <button @click="resetBinds">Reset</button>
+                <button @click="saveBind">Save</button>
+            </div>
         </div>
     </div>
     <script src="vendor/vue.js"></script>
