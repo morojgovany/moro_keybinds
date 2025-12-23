@@ -115,6 +115,8 @@ body {
     justify-content: flex-start;
     padding-bottom: 2%;
     padding-left: 4%;
+    display: flex;
+    gap: 0.5rem;
 }
 
 .actions {
@@ -137,12 +139,25 @@ select {
     font-family: rdr;
 }
 
-#reset {
+#reset,
+#save {
     width: 20%;
-    background-color: darkred;
     color: #F2F0EF;
     border: none;
     border-radius: 0.4rem;
     cursor: pointer;
     font-family: rdr;
+}
+
+#reset {
+    background-color: darkred;
+}
+
+#save {
+    background-color: #2b6b2b;
+}
+
+#save:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
 }

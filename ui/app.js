@@ -10,6 +10,7 @@ createApp({
             locale: 'en', // change this to change the locale ONLY IN DEVMODE
             translations: {},
             fallbackTranslations: {},
+            pendingChanges: false,
         };
     },
     mounted() {
@@ -95,6 +96,7 @@ createApp({
                         this.setLocales(message.locales, message.locale || this.locale);
                     }
                     this.visible = true;
+                    this.pendingChanges = false;
                     break;
                 case "hide":
                     this.visible = false;
@@ -110,20 +112,11 @@ createApp({
                 method: 'POST',
             });
         },
-        async deleteBind(bind) {
+        clearBind(bind) {
             bind.selectedAction = '';
             bind.bind_name = '';
             bind.bind_value = '';
-            await fetch(`https://${GetParentResourceName()}/moro_keybinds:deleteBind`, {
-                method: 'POST',
-                body: JSON.stringify(bind),
-            });
-        },
-        async saveBind(bind) {
-            await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBind`, {
-                method: 'POST',
-                body: JSON.stringify(bind),
-            });
+            this.pendingChanges = true;
         },
         async resetBinds() {
             this.binds.forEach((bind) => {
@@ -134,10 +127,25 @@ createApp({
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:resetBinds`, {
                 method: 'POST',
             });
+            this.pendingChanges = false;
+        },
+        async saveBinds() {
+            const binds = this.binds
+                .filter((bind) => bind.selectedAction)
+                .map((bind) => ({
+                    bind_key: bind.bind_key,
+                    bind_name: bind.bind_name,
+                    bind_value: bind.bind_value,
+                }));
+            await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBinds`, {
+                method: 'POST',
+                body: JSON.stringify({ binds }),
+            });
+            this.pendingChanges = false;
         },
         onBindChange(bind) {
             if (!bind.selectedAction) {
-                this.deleteBind(bind);
+                this.clearBind(bind);
                 return;
             }
             const action = this.actions.find(
@@ -149,7 +157,7 @@ createApp({
             bind.bind_name = action.label;
             bind.bind_value = action.value;
             bind.bind_type = action.type;
-            this.saveBind(bind);
+            this.pendingChanges = true;
         },
     }
 }).mount("#app");

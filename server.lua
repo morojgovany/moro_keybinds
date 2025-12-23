@@ -47,6 +47,38 @@ AddEventHandler('moro_keybinds:saveBind', function(bind)
     TriggerClientEvent('moro_keybinds:saveBind', _source, bind)
 end)
 
+RegisterNetEvent('moro_keybinds:saveBinds')
+AddEventHandler('moro_keybinds:saveBinds', function(payload)
+    local _source = source
+    local char_id = jo.framework:getCharacterId(_source)
+    if not char_id then
+        return
+    end
+
+    local binds = payload and payload.binds or {}
+    if type(binds) ~= 'table' then
+        binds = {}
+    end
+
+    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {char_id})
+
+    local validBinds = {}
+    for _, bind in ipairs(binds) do
+        if type(bind) == 'table' then
+            local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
+            local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
+            if validEvent or validCommand then
+                MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {char_id, bind.bind_name, bind.bind_key, bind.bind_value})
+                validBinds[#validBinds + 1] = bind
+            else
+                print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. tostring(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(char_id) .. ', check for possible cheat.')
+            end
+        end
+    end
+
+    TriggerClientEvent('moro_keybinds:syncBinds', _source, validBinds)
+end)
+
 RegisterNetEvent('moro_keybinds:deleteBind')
 AddEventHandler('moro_keybinds:deleteBind', function(bind)
     local _source = source

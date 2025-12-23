@@ -8,6 +8,7 @@ window.MoroKeybindsLocales = {
       "delete": "Delete",
       "reset": "Reset",
       "resetAll": "Reset all keybinds",
+      "save": "Save",
       "close": "Close"
     },
     "messages": {
@@ -23,6 +24,7 @@ window.MoroKeybindsLocales = {
       "delete": "Supprimer",
       "reset": "Réinitialiser",
       "resetAll": "Réinitialiser tous les raccourcis",
+      "save": "Sauvegarder",
       "close": "Fermer"
     },
     "messages": {
@@ -38,6 +40,7 @@ window.MoroKeybindsLocales = {
       "delete": "Eliminar",
       "reset": "Restablecer",
       "resetAll": "Restablecer todos los atajos",
+      "save": "Guardar",
       "close": "Cerrar"
     },
     "messages": {
@@ -53,6 +56,7 @@ window.MoroKeybindsLocales = {
       "delete": "Löschen",
       "reset": "Zurücksetzen",
       "resetAll": "Alle Tastenbelegungen zurücksetzen",
+      "save": "Speichern",
       "close": "Schließen"
     },
     "messages": {
@@ -68,6 +72,7 @@ window.MoroKeybindsLocales = {
       "delete": "Elimina",
       "reset": "Reimposta",
       "resetAll": "Reimposta tutti i tasti",
+      "save": "Salvare",
       "close": "Chiudi"
     },
     "messages": {
@@ -83,6 +88,7 @@ window.MoroKeybindsLocales = {
       "delete": "Excluir",
       "reset": "Redefinir",
       "resetAll": "Redefinir todos os atalhos",
+      "save": "Salvar",
       "close": "Fechar"
     },
     "messages": {
@@ -98,6 +104,7 @@ window.MoroKeybindsLocales = {
       "delete": "Удалить",
       "reset": "Сбросить",
       "resetAll": "Сбросить все назначения",
+      "save": "Сохранить",
       "close": "Закрыть"
     },
     "messages": {
@@ -113,6 +120,7 @@ window.MoroKeybindsLocales = {
       "delete": "Verwijderen",
       "reset": "Resetten",
       "resetAll": "Alle sneltoetsen resetten",
+      "save": "Opslaan",
       "close": "Sluiten"
     },
     "messages": {
@@ -128,6 +136,7 @@ window.MoroKeybindsLocales = {
       "delete": "Usuń",
       "reset": "Resetuj",
       "resetAll": "Zresetuj wszystkie skróty",
+      "save": "Zapisz",
       "close": "Zamknij"
     },
     "messages": {
@@ -143,6 +152,7 @@ window.MoroKeybindsLocales = {
       "delete": "Sil",
       "reset": "Sıfırla",
       "resetAll": "Tüm kısayolları sıfırla",
+      "save": "Kaydet",
       "close": "Kapat"
     },
     "messages": {
@@ -158,6 +168,7 @@ window.MoroKeybindsLocales = {
       "delete": "حذف",
       "reset": "إعادة تعيين",
       "resetAll": "إعادة تعيين جميع الاختصارات",
+      "save": "حفظ",
       "close": "إغلاق"
     },
     "messages": {
@@ -173,6 +184,7 @@ window.MoroKeybindsLocales = {
       "delete": "删除",
       "reset": "重置",
       "resetAll": "重置所有快捷键",
+      "save": "保存",
       "close": "关闭"
     },
     "messages": {
@@ -188,6 +200,7 @@ window.MoroKeybindsLocales = {
       "delete": "削除",
       "reset": "リセット",
       "resetAll": "すべてのキーバインドをリセット",
+      "save": "保存",
       "close": "閉じる"
     },
     "messages": {
@@ -203,6 +216,7 @@ window.MoroKeybindsLocales = {
       "delete": "삭제",
       "reset": "초기화",
       "resetAll": "모든 키 바인드 초기화",
+      "save": "저장",
       "close": "닫기"
     },
     "messages": {

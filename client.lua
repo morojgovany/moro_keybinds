@@ -179,14 +179,6 @@ AddEventHandler('moro_keybinds:syncBinds', function(binds)
     end
 end)
 
-RegisterNetEvent('moro_keybinds:saveBind')
-AddEventHandler('moro_keybinds:saveBind', function(bind)
-    local playerBind = buildBind(bind)
-    if playerBind then
-        playerBinds[bind.bind_key] = playerBind
-    end
-end)
-
 RegisterNetEvent('moro_keybinds:deleteBind')
 AddEventHandler('moro_keybinds:deleteBind', function(bind)
     playerBinds[bind.bind_key] = nil
@@ -208,8 +200,8 @@ RegisterNUICallback('moro_keybinds:deleteBind', function(data, cb)
     cb('ok')
 end)
 
-RegisterNUICallback('moro_keybinds:saveBind', function(data, cb)
-    TriggerServerEvent('moro_keybinds:saveBind', data)
+RegisterNUICallback('moro_keybinds:saveBinds', function(data, cb)
+    TriggerServerEvent('moro_keybinds:saveBinds', data)
     cb('ok')
 end)
 

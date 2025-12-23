@@ -1,0 +1,874 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF'
+diff --git a/client.lua b/client.lua
+index 745b30c8b4bc3ad71ca6df4645501fe0a8fd9965..9f7b905ef52b11a03a33aefbd3aef9a41100d18d 100644
+--- a/client.lua
++++ b/client.lua
+@@ -191,33 +191,38 @@ RegisterNetEvent('moro_keybinds:deleteBind')
+ AddEventHandler('moro_keybinds:deleteBind', function(bind)
+     playerBinds[bind.bind_key] = nil
+ end)
+
+ RegisterNetEvent('moro_keybinds:resetBinds')
+ AddEventHandler('moro_keybinds:resetBinds', function()
+     playerBinds = {}
+ end)
+
+ RegisterNUICallback('moro_keybinds:closeMenu', function(data, cb)
+     SetNuiFocus(false, false)
+     SendNUIMessage({ action = 'hide' })
+     cb('ok')
+ end)
+
+ RegisterNUICallback('moro_keybinds:deleteBind', function(data, cb)
+     TriggerServerEvent('moro_keybinds:deleteBind', data)
+     cb('ok')
+ end)
+
+ RegisterNUICallback('moro_keybinds:saveBind', function(data, cb)
+     TriggerServerEvent('moro_keybinds:saveBind', data)
+     cb('ok')
+ end)
+
++RegisterNUICallback('moro_keybinds:saveBinds', function(data, cb)
++    TriggerServerEvent('moro_keybinds:saveBinds', data)
++    cb('ok')
++end)
++
+ RegisterNUICallback('moro_keybinds:resetBinds', function(data, cb)
+     TriggerServerEvent('moro_keybinds:resetBinds')
+     cb('ok')
+ end)
+
+ RegisterCommand('keybinds', function()
+     TriggerEvent('moro_keybinds:openMenu')
+ end)
+diff --git a/locales.json b/locales.json
+index 1f01daf89562856b1532c5c691d35fd7490ad704..e3e7de07801e55b769debbb5ddd595856ef76fea 100644
+--- a/locales.json
++++ b/locales.json
+@@ -1,212 +1,226 @@
+ {
+   "en": {
+     "ui": {
+       "title": "Keybinds",
+       "none": "None",
+       "delete": "Delete",
+       "reset": "Reset",
+       "resetAll": "Reset all keybinds",
++      "save": "Save",
+       "close": "Close"
+     },
+     "messages": {
+       "bindSaved": "Bind saved",
+       "bindDeleted": "Bind deleted",
+       "bindsReset": "Binds reset"
+     }
+   },
+   "fr": {
+     "ui": {
+       "title": "Raccourcis",
+       "none": "Aucun",
+       "delete": "Supprimer",
+       "reset": "Réinitialiser",
+       "resetAll": "Réinitialiser tous les raccourcis",
++      "save": "Sauvegarder",
+       "close": "Fermer"
+     },
+     "messages": {
+       "bindSaved": "Raccourci enregistré",
+       "bindDeleted": "Raccourci supprimé",
+       "bindsReset": "Raccourcis réinitialisés"
+     }
+   },
+   "es": {
+     "ui": {
+       "title": "Atajos",
+       "none": "Ninguno",
+       "delete": "Eliminar",
+       "reset": "Restablecer",
+       "resetAll": "Restablecer todos los atajos",
++      "save": "Guardar",
+       "close": "Cerrar"
+     },
+     "messages": {
+       "bindSaved": "Atajo guardado",
+       "bindDeleted": "Atajo eliminado",
+       "bindsReset": "Atajos restablecidos"
+     }
+   },
+   "de": {
+     "ui": {
+       "title": "Tastenbelegung",
+       "none": "Keine",
+       "delete": "Löschen",
+       "reset": "Zurücksetzen",
+       "resetAll": "Alle Tastenbelegungen zurücksetzen",
++      "save": "Speichern",
+       "close": "Schließen"
+     },
+     "messages": {
+       "bindSaved": "Belegung gespeichert",
+       "bindDeleted": "Belegung gelöscht",
+       "bindsReset": "Belegungen zurückgesetzt"
+     }
+   },
+   "it": {
+     "ui": {
+       "title": "Tasti rapidi",
+       "none": "Nessuno",
+       "delete": "Elimina",
+       "reset": "Reimposta",
+       "resetAll": "Reimposta tutti i tasti",
++      "save": "Salvare",
+       "close": "Chiudi"
+     },
+     "messages": {
+       "bindSaved": "Tasto salvato",
+       "bindDeleted": "Tasto eliminato",
+       "bindsReset": "Tasti reimpostati"
+     }
+   },
+   "pt": {
+     "ui": {
+       "title": "Atalhos",
+       "none": "Nenhum",
+       "delete": "Excluir",
+       "reset": "Redefinir",
+       "resetAll": "Redefinir todos os atalhos",
++      "save": "Salvar",
+       "close": "Fechar"
+     },
+     "messages": {
+       "bindSaved": "Atalho salvo",
+       "bindDeleted": "Atalho excluído",
+       "bindsReset": "Atalhos redefinidos"
+     }
+   },
+   "ru": {
+     "ui": {
+       "title": "Назначения клавиш",
+       "none": "Нет",
+       "delete": "Удалить",
+       "reset": "Сбросить",
+       "resetAll": "Сбросить все назначения",
++      "save": "Сохранить",
+       "close": "Закрыть"
+     },
+     "messages": {
+       "bindSaved": "Назначение сохранено",
+       "bindDeleted": "Назначение удалено",
+       "bindsReset": "Назначения сброшены"
+     }
+   },
+   "nl": {
+     "ui": {
+       "title": "Sneltoetsen",
+       "none": "Geen",
+       "delete": "Verwijderen",
+       "reset": "Resetten",
+       "resetAll": "Alle sneltoetsen resetten",
++      "save": "Opslaan",
+       "close": "Sluiten"
+     },
+     "messages": {
+       "bindSaved": "Sneltoets opgeslagen",
+       "bindDeleted": "Sneltoets verwijderd",
+       "bindsReset": "Sneltoetsen gereset"
+     }
+   },
+   "pl": {
+     "ui": {
+       "title": "Skróty klawiszowe",
+       "none": "Brak",
+       "delete": "Usuń",
+       "reset": "Resetuj",
+       "resetAll": "Zresetuj wszystkie skróty",
++      "save": "Zapisz",
+       "close": "Zamknij"
+     },
+     "messages": {
+       "bindSaved": "Skrót zapisany",
+       "bindDeleted": "Skrót usunięty",
+       "bindsReset": "Skróty zresetowane"
+     }
+   },
+   "tr": {
+     "ui": {
+       "title": "Kısayollar",
+       "none": "Yok",
+       "delete": "Sil",
+       "reset": "Sıfırla",
+       "resetAll": "Tüm kısayolları sıfırla",
++      "save": "Kaydet",
+       "close": "Kapat"
+     },
+     "messages": {
+       "bindSaved": "Kısayol kaydedildi",
+       "bindDeleted": "Kısayol silindi",
+       "bindsReset": "Kısayollar sıfırlandı"
+     }
+   },
+   "ar": {
+     "ui": {
+       "title": "الاختصارات",
+       "none": "لا شيء",
+       "delete": "حذف",
+       "reset": "إعادة تعيين",
+       "resetAll": "إعادة تعيين جميع الاختصارات",
++      "save": "حفظ",
+       "close": "إغلاق"
+     },
+     "messages": {
+       "bindSaved": "تم حفظ الاختصار",
+       "bindDeleted": "تم حذف الاختصار",
+       "bindsReset": "تمت إعادة تعيين الاختصارات"
+     }
+   },
+   "zh": {
+     "ui": {
+       "title": "快捷键",
+       "none": "无",
+       "delete": "删除",
+       "reset": "重置",
+       "resetAll": "重置所有快捷键",
++      "save": "保存",
+       "close": "关闭"
+     },
+     "messages": {
+       "bindSaved": "快捷键已保存",
+       "bindDeleted": "快捷键已删除",
+       "bindsReset": "快捷键已重置"
+     }
+   },
+   "ja": {
+     "ui": {
+       "title": "キーバインド",
+       "none": "なし",
+       "delete": "削除",
+       "reset": "リセット",
+       "resetAll": "すべてのキーバインドをリセット",
++      "save": "保存",
+       "close": "閉じる"
+     },
+     "messages": {
+       "bindSaved": "キーバインドを保存しました",
+       "bindDeleted": "キーバインドを削除しました",
+       "bindsReset": "キーバインドをリセットしました"
+     }
+   },
+   "ko": {
+     "ui": {
+       "title": "키 바인드",
+       "none": "없음",
+       "delete": "삭제",
+       "reset": "초기화",
+       "resetAll": "모든 키 바인드 초기화",
++      "save": "저장",
+       "close": "닫기"
+     },
+     "messages": {
+       "bindSaved": "키 바인드가 저장됨",
+       "bindDeleted": "키 바인드가 삭제됨",
+       "bindsReset": "키 바인드가 초기화됨"
+     }
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/server.lua b/server.lua
+index 22de080d776ad608af45961ece3b495aaa181d1e..97f0e0e0cb18b8a3d180115aac163a1628a955b1 100644
+--- a/server.lua
++++ b/server.lua
+@@ -25,46 +25,78 @@ end)
+
+ jo.framework:onCharacterSelected(function(source)
+     local _source = source
+     local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {source})
+     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
+ end)
+
+ RegisterNetEvent('moro_keybinds:saveBind')
+ AddEventHandler('moro_keybinds:saveBind', function(bind)
+     local _source = source
+     local char_id = jo.framework:getCharacterId(_source)
+     if not char_id then
+         return
+     end
+     local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
+     local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
+     if not validEvent and not validCommand then
+         print('Tried to bind ' .. bind.bind_name .. ' => ' .. bind.bind_value .. ' from character ' .. jo.framework:getRPName(char_id) .. ', check for possible cheat.')
+         return
+     end
+     MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {char_id, bind.bind_key})
+     MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {char_id, bind.bind_name, bind.bind_key, bind.bind_value})
+     TriggerClientEvent('moro_keybinds:saveBind', _source, bind)
+ end)
+
++RegisterNetEvent('moro_keybinds:saveBinds')
++AddEventHandler('moro_keybinds:saveBinds', function(payload)
++    local _source = source
++    local char_id = jo.framework:getCharacterId(_source)
++    if not char_id then
++        return
++    end
++
++    local binds = payload and payload.binds or {}
++    if type(binds) ~= 'table' then
++        binds = {}
++    end
++
++    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {char_id})
++
++    local validBinds = {}
++    for _, bind in ipairs(binds) do
++        if type(bind) == 'table' then
++            local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
++            local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
++            if validEvent or validCommand then
++                MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {char_id, bind.bind_name, bind.bind_key, bind.bind_value})
++                validBinds[#validBinds + 1] = bind
++            else
++                print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. tostring(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(char_id) .. ', check for possible cheat.')
++            end
++        end
++    end
++
++    TriggerClientEvent('moro_keybinds:syncBinds', _source, validBinds)
++end)
++
+ RegisterNetEvent('moro_keybinds:deleteBind')
+ AddEventHandler('moro_keybinds:deleteBind', function(bind)
+     local _source = source
+     local char_id = jo.framework:getCharacterId(_source)
+     if not char_id then
+         return
+     end
+     MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {char_id, bind.bind_key})
+     TriggerClientEvent('moro_keybinds:deleteBind', _source, bind)
+ end)
+
+ RegisterNetEvent('moro_keybinds:resetBinds')
+ AddEventHandler('moro_keybinds:resetBinds', function()
+     local _source = source
+     local char_id = jo.framework:getCharacterId(_source)
+     if not char_id then
+         return
+     end
+     MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {char_id})
+     TriggerClientEvent('moro_keybinds:resetBinds', _source)
+ end)
+diff --git a/ui/app.js b/ui/app.js
+index 4f3ec77fb9e26abf5fde0026d5a68bf63c94c997..9fee9f11d69a3279bac8ab1ff3d1ba7dffc78245 100644
+--- a/ui/app.js
++++ b/ui/app.js
+@@ -1,37 +1,38 @@
+ const { createApp, nextTick } = Vue;
+ createApp({
+     data() {
+         return {
+             devMode: true, // if set true, the app will load with default data and locales in locales.dev.js, directly in the browser
+             visible: false,
+             binds: [],
+             actions: [],
+             locales: {},
+             locale: 'en', // change this to change the locale ONLY IN DEVMODE
+             translations: {},
+             fallbackTranslations: {},
++            pendingChanges: false,
+         };
+     },
+     mounted() {
+         if (this.devMode) {
+             if (window.MoroKeybindsLocales) {
+                 const locale = window.MoroKeybindsLocale || this.locale;
+                 this.setLocales(window.MoroKeybindsLocales, locale);
+             }
+             this.visible = true;
+             this.actions = [
+                 { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
+                 { label: 'Reload skin', value: 'rc', type: 'command' },
+             ];
+             this.binds = [
+                 { bind_key: 'NUMPAD_1', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_2', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_3', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_4', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_5', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_6', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_7', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_8', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_9', bind_name: '', bind_value: '', selectedAction: '' },
+                 { bind_key: 'NUMPAD_0', bind_name: '', bind_value: '', selectedAction: '' },
+             ];
+@@ -73,83 +74,90 @@ createApp({
+                 ...bind,
+                 selectedAction: action ? this.actionKey(action) : '',
+             };
+         },
+         availableActions(bind) {
+             const usedActions = new Set(
+                 this.binds
+                     .filter((entry) => entry.selectedAction && entry.bind_key !== bind.bind_key)
+                     .map((entry) => entry.selectedAction)
+             );
+             return this.actions.filter((action) => {
+                 const key = this.actionKey(action);
+                 return !usedActions.has(key) || key === bind.selectedAction;
+             });
+         },
+         onMessage(event) {
+             const message = event.data;
+             switch (message.action) {
+                 case "show":
+                     this.actions = message.actions || [];
+                     this.binds = (message.binds || []).map((bind) => this.normalizeBind(bind));
+                     if (message.locales) {
+                         this.setLocales(message.locales, message.locale || this.locale);
+                     }
+                     this.visible = true;
++                    this.pendingChanges = false;
+                     break;
+                 case "hide":
+                     this.visible = false;
+                     break;
+                 default:
+                     this.visible = false;
+                     return;
+             }
+         },
+         closeMenu() {
+             this.visible = false;
+             fetch(`https://${GetParentResourceName()}/moro_keybinds:closeMenu`, {
+                 method: 'POST',
+             });
+         },
+-        async deleteBind(bind) {
++        clearBind(bind) {
+             bind.selectedAction = '';
+             bind.bind_name = '';
+             bind.bind_value = '';
+-            await fetch(`https://${GetParentResourceName()}/moro_keybinds:deleteBind`, {
+-                method: 'POST',
+-                body: JSON.stringify(bind),
+-            });
+-        },
+-        async saveBind(bind) {
+-            await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBind`, {
+-                method: 'POST',
+-                body: JSON.stringify(bind),
+-            });
++            this.pendingChanges = true;
+         },
+         async resetBinds() {
+             this.binds.forEach((bind) => {
+                 bind.selectedAction = '';
+                 bind.bind_name = '';
+                 bind.bind_value = '';
+             });
+             await fetch(`https://${GetParentResourceName()}/moro_keybinds:resetBinds`, {
+                 method: 'POST',
+             });
++            this.pendingChanges = false;
++        },
++        async saveBinds() {
++            const binds = this.binds
++                .filter((bind) => bind.selectedAction)
++                .map((bind) => ({
++                    bind_key: bind.bind_key,
++                    bind_name: bind.bind_name,
++                    bind_value: bind.bind_value,
++                }));
++            await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBinds`, {
++                method: 'POST',
++                body: JSON.stringify({ binds }),
++            });
++            this.pendingChanges = false;
+         },
+         onBindChange(bind) {
+             if (!bind.selectedAction) {
+-                this.deleteBind(bind);
++                this.clearBind(bind);
+                 return;
+             }
+             const action = this.actions.find(
+                 (candidate) => this.actionKey(candidate) === bind.selectedAction
+             );
+             if (!action) {
+                 return;
+             }
+             bind.bind_name = action.label;
+             bind.bind_value = action.value;
+             bind.bind_type = action.type;
+-            this.saveBind(bind);
++            this.pendingChanges = true;
+         },
+     }
+ }).mount("#app");
+diff --git a/ui/index.html b/ui/index.html
+index 43b6e85a1815b30c7be80e71b353e9dc65039788..7bd1732b870ab3b0bf128ec6701b1ea01eacf0c0 100644
+--- a/ui/index.html
++++ b/ui/index.html
+@@ -5,42 +5,43 @@
+ <title>Keybinds</title>
+
+ <head>
+     <link href="style.css" rel="stylesheet">
+ </head>
+
+ <body>
+     <div id="app">
+         <div class="wrapper" v-show="visible">
+             <div class="header">
+                 <h1>{{ t('ui.title') }}</h1>
+                 <button id="close" @click="closeMenu" :title="t('ui.close')">X</button>
+             </div>
+             <div class="content">
+                 <div class="binds">
+                     <div class="bind" v-for="bind in binds" :key="bind.bind_key">
+                         <h2>{{ bind.bind_key }}</h2>
+                         <div class="actions">
+                             <select v-model="bind.selectedAction" @change="onBindChange(bind)">
+                                 <option value="">{{ t('ui.none') }}</option>
+                                 <option v-for="action in availableActions(bind)" :key="actionKey(action)"
+                                     :value="actionKey(action)">
+                                     {{ action.label }}
+                                 </option>
+                             </select>
+-                            <button class="delete" @click="deleteBind(bind)" :disabled="!bind.selectedAction">X<small>{{
++                            <button class="delete" @click="clearBind(bind)" :disabled="!bind.selectedAction">X<small>{{
+                                     t('ui.delete') }}</small></button>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+             <div class="footer">
++                <button id="save" @click="saveBinds" :disabled="!pendingChanges">{{ t('ui.save') }}</button>
+                 <button id="reset" @click="resetBinds">{{ t('ui.resetAll') }}</button>
+             </div>
+         </div>
+     </div>
+     <script src="vendor/vue.js"></script>
+     <script src="locales.dev.js" type="text/javascript"></script>
+     <script src="app.js" type="text/javascript"></script>
+ </body>
+
+-</html>
+\ No newline at end of file
++</html>
+diff --git a/ui/locales.dev.js b/ui/locales.dev.js
+index 8a690cfa89d90c3d0fcb22fd78e54ca311829075..ad799c63eda80290d8ee8e457118bfdc5d430a78 100644
+--- a/ui/locales.dev.js
++++ b/ui/locales.dev.js
+@@ -1,214 +1,228 @@
+ // Dev-only locale loader (no async calls)
+ // Keep in sync with locales.json
+ window.MoroKeybindsLocales = {
+   "en": {
+     "ui": {
+       "title": "Keybinds",
+       "none": "None",
+       "delete": "Delete",
+       "reset": "Reset",
+       "resetAll": "Reset all keybinds",
++      "save": "Save",
+       "close": "Close"
+     },
+     "messages": {
+       "bindSaved": "Bind saved",
+       "bindDeleted": "Bind deleted",
+       "bindsReset": "Binds reset"
+     }
+   },
+   "fr": {
+     "ui": {
+       "title": "Raccourcis",
+       "none": "Aucun",
+       "delete": "Supprimer",
+       "reset": "Réinitialiser",
+       "resetAll": "Réinitialiser tous les raccourcis",
++      "save": "Sauvegarder",
+       "close": "Fermer"
+     },
+     "messages": {
+       "bindSaved": "Raccourci enregistré",
+       "bindDeleted": "Raccourci supprimé",
+       "bindsReset": "Raccourcis réinitialisés"
+     }
+   },
+   "es": {
+     "ui": {
+       "title": "Atajos",
+       "none": "Ninguno",
+       "delete": "Eliminar",
+       "reset": "Restablecer",
+       "resetAll": "Restablecer todos los atajos",
++      "save": "Guardar",
+       "close": "Cerrar"
+     },
+     "messages": {
+       "bindSaved": "Atajo guardado",
+       "bindDeleted": "Atajo eliminado",
+       "bindsReset": "Atajos restablecidos"
+     }
+   },
+   "de": {
+     "ui": {
+       "title": "Tastenbelegung",
+       "none": "Keine",
+       "delete": "Löschen",
+       "reset": "Zurücksetzen",
+       "resetAll": "Alle Tastenbelegungen zurücksetzen",
++      "save": "Speichern",
+       "close": "Schließen"
+     },
+     "messages": {
+       "bindSaved": "Belegung gespeichert",
+       "bindDeleted": "Belegung gelöscht",
+       "bindsReset": "Belegungen zurückgesetzt"
+     }
+   },
+   "it": {
+     "ui": {
+       "title": "Tasti rapidi",
+       "none": "Nessuno",
+       "delete": "Elimina",
+       "reset": "Reimposta",
+       "resetAll": "Reimposta tutti i tasti",
++      "save": "Salvare",
+       "close": "Chiudi"
+     },
+     "messages": {
+       "bindSaved": "Tasto salvato",
+       "bindDeleted": "Tasto eliminato",
+       "bindsReset": "Tasti reimpostati"
+     }
+   },
+   "pt": {
+     "ui": {
+       "title": "Atalhos",
+       "none": "Nenhum",
+       "delete": "Excluir",
+       "reset": "Redefinir",
+       "resetAll": "Redefinir todos os atalhos",
++      "save": "Salvar",
+       "close": "Fechar"
+     },
+     "messages": {
+       "bindSaved": "Atalho salvo",
+       "bindDeleted": "Atalho excluído",
+       "bindsReset": "Atalhos redefinidos"
+     }
+   },
+   "ru": {
+     "ui": {
+       "title": "Назначения клавиш",
+       "none": "Нет",
+       "delete": "Удалить",
+       "reset": "Сбросить",
+       "resetAll": "Сбросить все назначения",
++      "save": "Сохранить",
+       "close": "Закрыть"
+     },
+     "messages": {
+       "bindSaved": "Назначение сохранено",
+       "bindDeleted": "Назначение удалено",
+       "bindsReset": "Назначения сброшены"
+     }
+   },
+   "nl": {
+     "ui": {
+       "title": "Sneltoetsen",
+       "none": "Geen",
+       "delete": "Verwijderen",
+       "reset": "Resetten",
+       "resetAll": "Alle sneltoetsen resetten",
++      "save": "Opslaan",
+       "close": "Sluiten"
+     },
+     "messages": {
+       "bindSaved": "Sneltoets opgeslagen",
+       "bindDeleted": "Sneltoets verwijderd",
+       "bindsReset": "Sneltoetsen gereset"
+     }
+   },
+   "pl": {
+     "ui": {
+       "title": "Skróty klawiszowe",
+       "none": "Brak",
+       "delete": "Usuń",
+       "reset": "Resetuj",
+       "resetAll": "Zresetuj wszystkie skróty",
++      "save": "Zapisz",
+       "close": "Zamknij"
+     },
+     "messages": {
+       "bindSaved": "Skrót zapisany",
+       "bindDeleted": "Skrót usunięty",
+       "bindsReset": "Skróty zresetowane"
+     }
+   },
+   "tr": {
+     "ui": {
+       "title": "Kısayollar",
+       "none": "Yok",
+       "delete": "Sil",
+       "reset": "Sıfırla",
+       "resetAll": "Tüm kısayolları sıfırla",
++      "save": "Kaydet",
+       "close": "Kapat"
+     },
+     "messages": {
+       "bindSaved": "Kısayol kaydedildi",
+       "bindDeleted": "Kısayol silindi",
+       "bindsReset": "Kısayollar sıfırlandı"
+     }
+   },
+   "ar": {
+     "ui": {
+       "title": "الاختصارات",
+       "none": "لا شيء",
+       "delete": "حذف",
+       "reset": "إعادة تعيين",
+       "resetAll": "إعادة تعيين جميع الاختصارات",
++      "save": "حفظ",
+       "close": "إغلاق"
+     },
+     "messages": {
+       "bindSaved": "تم حفظ الاختصار",
+       "bindDeleted": "تم حذف الاختصار",
+       "bindsReset": "تمت إعادة تعيين الاختصارات"
+     }
+   },
+   "zh": {
+     "ui": {
+       "title": "快捷键",
+       "none": "无",
+       "delete": "删除",
+       "reset": "重置",
+       "resetAll": "重置所有快捷键",
++      "save": "保存",
+       "close": "关闭"
+     },
+     "messages": {
+       "bindSaved": "快捷键已保存",
+       "bindDeleted": "快捷键已删除",
+       "bindsReset": "快捷键已重置"
+     }
+   },
+   "ja": {
+     "ui": {
+       "title": "キーバインド",
+       "none": "なし",
+       "delete": "削除",
+       "reset": "リセット",
+       "resetAll": "すべてのキーバインドをリセット",
++      "save": "保存",
+       "close": "閉じる"
+     },
+     "messages": {
+       "bindSaved": "キーバインドを保存しました",
+       "bindDeleted": "キーバインドを削除しました",
+       "bindsReset": "キーバインドをリセットしました"
+     }
+   },
+   "ko": {
+     "ui": {
+       "title": "키 바인드",
+       "none": "없음",
+       "delete": "삭제",
+       "reset": "초기화",
+       "resetAll": "모든 키 바인드 초기화",
++      "save": "저장",
+       "close": "닫기"
+     },
+     "messages": {
+       "bindSaved": "키 바인드가 저장됨",
+       "bindDeleted": "키 바인드가 삭제됨",
+       "bindsReset": "키 바인드가 초기화됨"
+     }
+   }
+ };
+diff --git a/ui/style.css b/ui/style.css
+index 4a914c9aa229676f0d1bea8a8679f9caaad3c835..d1709ebb9155985cb8cbbe801f42591ad765eca4 100644
+--- a/ui/style.css
++++ b/ui/style.css
+@@ -93,56 +93,71 @@ body {
+     position: absolute;
+     right: 0;
+     top: 0;
+     color: darkred;
+     border: none;
+     background-color: transparent;
+     font-size: 2rem;
+     font-weight: bold;
+     cursor: pointer;
+ }
+
+ .delete {
+     color: darkred;
+     border: none;
+     background-color: transparent;
+     font-weight: bold;
+     cursor: pointer;
+ }
+
+ .footer {
+     width: 100%;
+     align-items: flex-start;
+     justify-content: flex-start;
+     padding-bottom: 2%;
+     padding-left: 4%;
++    display: flex;
++    gap: 0.5rem;
+ }
+
+ .actions {
+     display: flex;
+     flex-direction: row;
+     gap: 0.4rem;
+     align-items: center;
+     justify-content: space-between;
+     width: 20%;
+ }
+
+ select {
+     width: 100%;
+     /* style with radius */
+     border-radius: 0.4rem;
+     border: none;
+     font-size: 1rem;
+     font-weight: bold;
+     cursor: pointer;
+     font-family: rdr;
+ }
+
+-#reset {
++#reset,
++#save {
+     width: 20%;
+-    background-color: darkred;
+     color: #F2F0EF;
+     border: none;
+     border-radius: 0.4rem;
+     cursor: pointer;
+     font-family: rdr;
+-}
+\ No newline at end of file
++}
++
++#reset {
++    background-color: darkred;
++}
++
++#save {
++    background-color: #2b6b2b;
++}
++
++#save:disabled {
++    cursor: not-allowed;
++    opacity: 0.6;
++}
+
+EOF
+)

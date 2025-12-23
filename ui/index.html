@@ -27,13 +27,14 @@
                                     {{ action.label }}
                                 </option>
                             </select>
-                            <button class="delete" @click="deleteBind(bind)" :disabled="!bind.selectedAction">X<small>{{
+                            <button class="delete" @click="clearBind(bind)" :disabled="!bind.selectedAction">X<small>{{
                                     t('ui.delete') }}</small></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="footer">
+                <button id="save" @click="saveBinds" :disabled="!pendingChanges">{{ t('ui.save') }}</button>
                 <button id="reset" @click="resetBinds">{{ t('ui.resetAll') }}</button>
             </div>
         </div>
