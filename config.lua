@@ -31,7 +31,7 @@ Config.Keys = {
         trigger = 'keyUp',
     },
 }
--- The customizable keys are the keys that the player can assign to actions
+-- The customizable keys are the keys that the player can assign to actions, be careful of conflicts with other scripts & remember that depends on the keyboard layout of the player
 Config.customizableKeys = {
     NUMPAD_1 = {
         hash = 0x61,

@@ -2,7 +2,7 @@ const { createApp, nextTick } = Vue;
 createApp({
     data() {
         return {
-            devMode: true, // if set true, the app will load with default data and locales in locales.dev.js, directly in the browser
+            devMode: false, // if set true, the app will load with default data and locales in locales.dev.js, directly in the browser
             visible: false,
             binds: [],
             actions: [],
