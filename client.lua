@@ -179,3 +179,7 @@ RegisterNUICallback('moro_keybinds:resetBinds', function(data, cb)
     TriggerServerEvent('moro_keybinds:resetBinds')
     cb('ok')
 end)
+
+RegisterCommand('keybinds', function()
+    TriggerEvent('moro_keybinds:openMenu')
+end)
