@@ -1,0 +1,100 @@
+{
+  "en": {
+    "ui": {
+      "title": "Keybinds",
+      "none": "None",
+      "delete": "Delete",
+      "reset": "Reset",
+      "close": "Close"
+    },
+    "messages": {
+      "bindSaved": "Bind saved",
+      "bindDeleted": "Bind deleted",
+      "bindsReset": "Binds reset"
+    }
+  },
+  "fr": {
+    "ui": {
+      "title": "Raccourcis",
+      "none": "Aucun",
+      "delete": "Supprimer",
+      "reset": "Réinitialiser",
+      "close": "Fermer"
+    },
+    "messages": {
+      "bindSaved": "Raccourci enregistré",
+      "bindDeleted": "Raccourci supprimé",
+      "bindsReset": "Raccourcis réinitialisés"
+    }
+  },
+  "es": {
+    "ui": {
+      "title": "Atajos",
+      "none": "Ninguno",
+      "delete": "Eliminar",
+      "reset": "Restablecer",
+      "close": "Cerrar"
+    },
+    "messages": {
+      "bindSaved": "Atajo guardado",
+      "bindDeleted": "Atajo eliminado",
+      "bindsReset": "Atajos restablecidos"
+    }
+  },
+  "de": {
+    "ui": {
+      "title": "Tastenbelegung",
+      "none": "Keine",
+      "delete": "Löschen",
+      "reset": "Zurücksetzen",
+      "close": "Schließen"
+    },
+    "messages": {
+      "bindSaved": "Belegung gespeichert",
+      "bindDeleted": "Belegung gelöscht",
+      "bindsReset": "Belegungen zurückgesetzt"
+    }
+  },
+  "it": {
+    "ui": {
+      "title": "Tasti rapidi",
+      "none": "Nessuno",
+      "delete": "Elimina",
+      "reset": "Reimposta",
+      "close": "Chiudi"
+    },
+    "messages": {
+      "bindSaved": "Tasto salvato",
+      "bindDeleted": "Tasto eliminato",
+      "bindsReset": "Tasti reimpostati"
+    }
+  },
+  "pt": {
+    "ui": {
+      "title": "Atalhos",
+      "none": "Nenhum",
+      "delete": "Excluir",
+      "reset": "Redefinir",
+      "close": "Fechar"
+    },
+    "messages": {
+      "bindSaved": "Atalho salvo",
+      "bindDeleted": "Atalho excluído",
+      "bindsReset": "Atalhos redefinidos"
+    }
+  },
+  "ru": {
+    "ui": {
+      "title": "Назначения клавиш",
+      "none": "Нет",
+      "delete": "Удалить",
+      "reset": "Сбросить",
+      "close": "Закрыть"
+    },
+    "messages": {
+      "bindSaved": "Назначение сохранено",
+      "bindDeleted": "Назначение удалено",
+      "bindsReset": "Назначения сброшены"
+    }
+  }
+}

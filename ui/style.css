@@ -136,3 +136,13 @@ select {
     cursor: pointer;
     font-family: rdr;
 }
+
+#reset {
+    width: 20%;
+    background-color: darkred;
+    color: #F2F0EF;
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    font-family: rdr;
+}
