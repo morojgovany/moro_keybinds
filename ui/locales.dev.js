@@ -1,4 +1,6 @@
-{
+// Dev-only locale loader (no async calls)
+// Keep in sync with locales.json
+window.MoroKeybindsLocales = {
   "en": {
     "ui": {
       "title": "Keybinds",
@@ -209,4 +211,4 @@
       "bindsReset": "키 바인드가 초기화됨"
     }
   }
-}
+};

@@ -18,6 +18,7 @@ server_script {
 }
 
 files {
+    'locales.json',
     'ui/*',
     'ui/assets/*',
     'ui/vendor/*',

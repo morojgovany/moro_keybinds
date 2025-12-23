@@ -1,4 +1,38 @@
 local playerBinds = {}
+local localesCache = nil
+
+local function loadLocales()
+    if localesCache then
+        return localesCache
+    end
+
+    local resourceName = GetCurrentResourceName()
+    local localesRaw = LoadResourceFile(resourceName, 'locales.json')
+    if not localesRaw then
+        print('moro_keybinds: locales.json not found')
+        localesCache = {}
+        return localesCache
+    end
+
+    local ok, decoded = pcall(json.decode, localesRaw)
+    if not ok or type(decoded) ~= 'table' then
+        print('moro_keybinds: failed to decode locales.json')
+        localesCache = {}
+        return localesCache
+    end
+
+    localesCache = decoded
+    return localesCache
+end
+
+local function resolveLocale()
+    local locale = Config.Locale or 'en'
+    local locales = loadLocales()
+    if locales[locale] then
+        return locale
+    end
+    return 'en'
+end
 
 local function getActionType(bind)
     if Config.actionsToBind.events[bind.bind_name] == bind.bind_value then
@@ -122,11 +156,15 @@ end
 
 RegisterNetEvent('moro_keybinds:openMenu')
 AddEventHandler('moro_keybinds:openMenu', function()
+    local locales = loadLocales()
+    local locale = resolveLocale()
     SetNuiFocus(true, true)
     SendNUIMessage({
         action = 'show',
         binds = getBindsForUi(),
         actions = getActionsForUi(),
+        locales = locales,
+        locale = locale,
     })
 end)
 

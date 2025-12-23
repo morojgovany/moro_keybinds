@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keybinds</title>
 
 <head>
     <link href="style.css" rel="stylesheet">
@@ -9,8 +12,8 @@
     <div id="app">
         <div class="wrapper" v-show="visible">
             <div class="header">
-                <h1>Keybinds</h1>
-                <button id="close" @click="closeMenu">X</button>
+                <h1>{{ t('ui.title') }}</h1>
+                <button id="close" @click="closeMenu" :title="t('ui.close')">X</button>
             </div>
             <div class="content">
                 <div class="binds">
@@ -18,24 +21,25 @@
                         <h2>{{ bind.bind_key }}</h2>
                         <div class="actions">
                             <select v-model="bind.selectedAction" @change="onBindChange(bind)">
-                                <option value="">None</option>
+                                <option value="">{{ t('ui.none') }}</option>
                                 <option v-for="action in availableActions(bind)" :key="actionKey(action)"
                                     :value="actionKey(action)">
                                     {{ action.label }}
                                 </option>
                             </select>
-                            <button class="delete" @click="deleteBind(bind)"
-                                :disabled="!bind.selectedAction">X<small>Delete</small></button>
+                            <button class="delete" @click="deleteBind(bind)" :disabled="!bind.selectedAction">X<small>{{
+                                    t('ui.delete') }}</small></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="footer">
-                <button id="reset" @click="resetBinds">Reset all keybinds</button>
+                <button id="reset" @click="resetBinds">{{ t('ui.resetAll') }}</button>
             </div>
         </div>
     </div>
     <script src="vendor/vue.js"></script>
+    <script src="locales.dev.js" type="text/javascript"></script>
     <script src="app.js" type="text/javascript"></script>
 </body>
 

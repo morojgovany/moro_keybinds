@@ -2,16 +2,22 @@ const { createApp, nextTick } = Vue;
 createApp({
     data() {
         return {
-            devMode: true,
+            devMode: true, // if set true, the app will load with default data and locales in locales.dev.js, directly in the browser
             visible: false,
-            displayMessage: false,
-            message: '',
             binds: [],
             actions: [],
+            locales: {},
+            locale: 'en', // change this to change the locale ONLY IN DEVMODE
+            translations: {},
+            fallbackTranslations: {},
         };
     },
     mounted() {
         if (this.devMode) {
+            if (window.MoroKeybindsLocales) {
+                const locale = window.MoroKeybindsLocale || this.locale;
+                this.setLocales(window.MoroKeybindsLocales, locale);
+            }
             this.visible = true;
             this.actions = [
                 { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
@@ -38,6 +44,23 @@ createApp({
         },
     },
     methods: {
+        getNestedValue(target, path) {
+            return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), target);
+        },
+        setLocales(locales, locale) {
+            this.locales = locales || {};
+            this.locale = locale || this.locale;
+            this.translations = this.locales[this.locale] || {};
+            this.fallbackTranslations = this.locales.en || {};
+        },
+        t(path) {
+            const value = this.getNestedValue(this.translations, path);
+            if (value !== undefined) {
+                return value;
+            }
+            const fallback = this.getNestedValue(this.fallbackTranslations, path);
+            return fallback !== undefined ? fallback : path;
+        },
         actionKey(action) {
             return `${action.type}:${action.value}`;
         },
@@ -68,26 +91,13 @@ createApp({
                 case "show":
                     this.actions = message.actions || [];
                     this.binds = (message.binds || []).map((bind) => this.normalizeBind(bind));
+                    if (message.locales) {
+                        this.setLocales(message.locales, message.locale || this.locale);
+                    }
                     this.visible = true;
                     break;
                 case "hide":
                     this.visible = false;
-                    break;
-                case 'success':
-                    this.displayMessage = true;
-                    this.message = message.message;
-                    setTimeout(() => {
-                        this.displayMessage = false;
-                        this.message = '';
-                    }, 5000);
-                    break;
-                case 'error':
-                    this.displayMessage = true;
-                    this.message = message.message;
-                    setTimeout(() => {
-                        this.displayMessage = false;
-                        this.message = '';
-                    }, 5000);
                     break;
                 default:
                     this.visible = false;
@@ -107,26 +117,12 @@ createApp({
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:deleteBind`, {
                 method: 'POST',
                 body: JSON.stringify(bind),
-            }).then(() => {
-                this.displayMessage = true;
-                this.message = 'Bind deleted';
-                setTimeout(() => {
-                    this.displayMessage = false;
-                    this.message = '';
-                }, 5000);
             });
         },
         async saveBind(bind) {
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBind`, {
                 method: 'POST',
                 body: JSON.stringify(bind),
-            }).then(() => {
-                this.displayMessage = true;
-                this.message = 'Bind saved';
-                setTimeout(() => {
-                    this.displayMessage = false;
-                    this.message = '';
-                }, 5000);
             });
         },
         async resetBinds() {
@@ -137,13 +133,6 @@ createApp({
             });
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:resetBinds`, {
                 method: 'POST',
-            }).then(() => {
-                this.displayMessage = true;
-                this.message = 'Binds reset';
-                setTimeout(() => {
-                    this.displayMessage = false;
-                    this.message = '';
-                }, 5000);
             });
         },
         onBindChange(bind) {
