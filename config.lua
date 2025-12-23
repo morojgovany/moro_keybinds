@@ -1,13 +1,16 @@
 Config = {}
 -- REMEMBER: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout. And it can lead to conflicts with other scripts.
+-- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+
+-- The keys binded by default for all players
 Config.Keys = {
     K = {
-        hash = 0x4B,
-        callback = function() -- example of command
+        hash = 0x4B, -- The hash of the key
+        callback = function() -- example of command executed when the key is pressed
             ExecuteCommand('rc')
         end,
-        wait = 1000,
-        trigger = 'keyUp',
+        wait = 1000, -- The wait time in milliseconds before the key can be pressed again
+        trigger = 'keyUp', -- The trigger of the key, can be 'keyUp' or 'keyDown'
     },
     Y = {
         hash = 0x59,
@@ -20,12 +23,14 @@ Config.Keys = {
             end
             TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_neutral_greet_f_002', 1.0, 1.0, -1, 1, 0, false, false, false, 0, true)
             RemoveAnimDict('ai_gestures@gen_female@standing@silent')
+            Wait(5000)
+            ClearPedTasks(PlayerPedId())
         end,
         wait = 1000,
         trigger = 'keyUp',
     },
 }
-
+-- The customizable keys are the keys that the player can assign to actions
 Config.customizableKeys = {
     NUMPAD_1 = {
         hash = 0x61,
@@ -79,13 +84,17 @@ Config.customizableKeys = {
     },
 }
 
+-- The actions to bind are the actions that the player is allowed to bind to the customizable keys
 Config.actionsToBind = {
-    events = {
+    -- Events that can be binded to the customizable keys (triggered by TriggerEvent)
+    clientEvents = {
         'Notification' = 'moro_notifications:TipRight',
     },
+    -- Server events that can be binded to the customizable keys (triggered by TriggerServerEvent)
+    serverEvents = {
+    },
+    -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     commands = {
         'Reload skin' = 'rc',
     },
 }
-
--- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes

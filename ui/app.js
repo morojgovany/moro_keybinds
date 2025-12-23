@@ -2,7 +2,7 @@ const { createApp, nextTick } = Vue;
 createApp({
     data() {
         return {
-            devMode: false,
+            devMode: true,
             visible: false,
             displayMessage: false,
             message: '',
@@ -20,6 +20,14 @@ createApp({
             this.binds = [
                 { bind_key: 'NUMPAD_1', bind_name: '', bind_value: '', selectedAction: '' },
                 { bind_key: 'NUMPAD_2', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_3', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_4', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_5', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_6', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_7', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_8', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_9', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_0', bind_name: '', bind_value: '', selectedAction: '' },
             ];
         }
         window.addEventListener("message", this.onMessage);
