@@ -1,16 +1,9 @@
 Citizen.CreateThread(function()
-    local exists = jo.database.doesTableExist('moro_keybinds')
-    if not exists then
-        local isTableCreated = jo.database.addTable('moro_keybinds', [[id INT NOT NULL AUTO_INCREMENT,
-        char_id INT NOT NULL DEFAULT '',
-        bind_name VARCHAR(50) NOT NULL DEFAULT '',
-        bind_key VARCHAR(50) NOT NULL DEFAULT '',
-        bind_value VARCHAR(50) NOT NULL DEFAULT '',]])
-        if not isTableCreated then
-            print('Failed to create table moro_keybinds')
-            error('Failed to create table moro_keybinds')
-        end
-    end
+    jo.database.addTable('moro_keybinds', [[id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    char_id INT NOT NULL DEFAULT 0,
+    bind_name VARCHAR(50) NOT NULL DEFAULT '',
+    bind_key VARCHAR(50) NOT NULL DEFAULT '',
+    bind_value VARCHAR(50) NOT NULL DEFAULT '']])
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
     for _, v in pairs(binds) do
@@ -25,17 +18,17 @@ end)
 
 jo.framework:onCharacterSelected(function(source)
     local _source = source
-    local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {source})
+    local identifiers = jo.framework:getUserIdentifiers(source)
+    local charId = identifiers.charid
+    local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {charId})
     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
 end)
 
 RegisterNetEvent('moro_keybinds:saveBind')
 AddEventHandler('moro_keybinds:saveBind', function(bind)
     local _source = source
-    local char_id = jo.framework:getCharacterId(_source)
-    if not char_id then
-        return
-    end
+    local identifiers = jo.framework:getUserIdentifiers(_source)
+    local charId = identifiers.charid
     local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
     local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
     if not validEvent and not validCommand then
@@ -50,10 +43,8 @@ end)
 RegisterNetEvent('moro_keybinds:saveBinds')
 AddEventHandler('moro_keybinds:saveBinds', function(payload)
     local _source = source
-    local char_id = jo.framework:getCharacterId(_source)
-    if not char_id then
-        return
-    end
+    local identifiers = jo.framework:getUserIdentifiers(_source)
+    local charId = identifiers.charid
 
     local binds = payload and payload.binds or {}
     if type(binds) ~= 'table' then
@@ -82,21 +73,17 @@ end)
 RegisterNetEvent('moro_keybinds:deleteBind')
 AddEventHandler('moro_keybinds:deleteBind', function(bind)
     local _source = source
-    local char_id = jo.framework:getCharacterId(_source)
-    if not char_id then
-        return
-    end
-    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {char_id, bind.bind_key})
+    local identifiers = jo.framework:getUserIdentifiers(_source)
+    local charId = identifiers.charid
+    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {charId, bind.bind_key})
     TriggerClientEvent('moro_keybinds:deleteBind', _source, bind)
 end)
 
 RegisterNetEvent('moro_keybinds:resetBinds')
 AddEventHandler('moro_keybinds:resetBinds', function()
     local _source = source
-    local char_id = jo.framework:getCharacterId(_source)
-    if not char_id then
-        return
-    end
-    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {char_id})
+    local identifiers = jo.framework:getUserIdentifiers(_source)
+    local charId = identifiers.charid
+    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {charId})
     TriggerClientEvent('moro_keybinds:resetBinds', _source)
 end)

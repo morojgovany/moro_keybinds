@@ -89,13 +89,15 @@ Config.customizableKeys = {
 Config.actionsToBind = {
     -- Events that can be binded to the customizable keys (triggered by TriggerEvent)
     clientEvents = {
-        'Notification' = 'moro_notifications:TipRight',
+        ['Notification'] = 'moro_notifications:TipRight',
     },
+
     -- Server events that can be binded to the customizable keys (triggered by TriggerServerEvent)
     serverEvents = {
     },
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     commands = {
-        'Reload skin' = 'rc',
+        ['Reload skin'] = 'rc',
     },
+
 }

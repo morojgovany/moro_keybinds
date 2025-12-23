@@ -9,6 +9,10 @@ description "Ultra simple key binding script for redm"
 
 client_script {
     'client.lua',
+}
+
+shared_script {
+    '@jo_libs/init.lua',
     'config.lua',
 }
 
@@ -37,4 +41,5 @@ jo_libs {
     'framework',
     'database',
     'notification',
+    'callback'
 }
