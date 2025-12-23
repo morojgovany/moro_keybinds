@@ -18,7 +18,7 @@
                         <h2>{{ bind.bind_key }}</h2>
                         <div class="actions">
                             <select v-model="bind.selectedAction" @change="onBindChange(bind)">
-                                <option value="">Aucun</option>
+                                <option value="">None</option>
                                 <option v-for="action in availableActions(bind)" :key="actionKey(action)"
                                     :value="actionKey(action)">
                                     {{ action.label }}
