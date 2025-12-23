@@ -7,32 +7,59 @@ createApp({
             displayMessage: false,
             message: '',
             binds: [],
-            bindsEvents: [],
-            bindKeys: [],
+            actions: [],
         };
     },
     mounted() {
         if (this.devMode) {
             this.visible = true;
+            this.actions = [
+                { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
+                { label: 'Reload skin', value: 'rc', type: 'command' },
+            ];
             this.binds = [
-
-            ]
+                { bind_key: 'NUMPAD_1', bind_name: '', bind_value: '', selectedAction: '' },
+                { bind_key: 'NUMPAD_2', bind_name: '', bind_value: '', selectedAction: '' },
+            ];
         }
         window.addEventListener("message", this.onMessage);
     },
     computed: {
-        optionList() {
-            return this.bindsEvents.filter((bindEvent) => !this.binds.some((bind) => bind.bind_event === bindEvent));
-        }
+        usedActions() {
+            return new Set(this.binds.filter((bind) => bind.selectedAction).map((bind) => bind.selectedAction));
+        },
     },
     methods: {
+        actionKey(action) {
+            return `${action.type}:${action.value}`;
+        },
+        normalizeBind(bind) {
+            const action = this.actions.find(
+                (candidate) =>
+                    candidate.label === bind.bind_name && candidate.value === bind.bind_value
+            );
+            return {
+                ...bind,
+                selectedAction: action ? this.actionKey(action) : '',
+            };
+        },
+        availableActions(bind) {
+            const usedActions = new Set(
+                this.binds
+                    .filter((entry) => entry.selectedAction && entry.bind_key !== bind.bind_key)
+                    .map((entry) => entry.selectedAction)
+            );
+            return this.actions.filter((action) => {
+                const key = this.actionKey(action);
+                return !usedActions.has(key) || key === bind.selectedAction;
+            });
+        },
         onMessage(event) {
             const message = event.data;
             switch (message.action) {
                 case "show":
-                    this.binds = message.binds;
-                    this.bindsEvents = message.bindsEvents;
-                    this.bindKeys = message.bindKeys;
+                    this.actions = message.actions || [];
+                    this.binds = (message.binds || []).map((bind) => this.normalizeBind(bind));
                     this.visible = true;
                     break;
                 case "hide":
@@ -66,7 +93,9 @@ createApp({
             });
         },
         async deleteBind(bind) {
-            this.binds = this.binds.filter((b) => b.bind_key !== bind.bind_key);
+            bind.selectedAction = '';
+            bind.bind_name = '';
+            bind.bind_value = '';
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:deleteBind`, {
                 method: 'POST',
                 body: JSON.stringify(bind),
@@ -80,7 +109,6 @@ createApp({
             });
         },
         async saveBind(bind) {
-            this.binds = this.binds.filter((b) => b.bind_key !== bind.bind_key);
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBind`, {
                 method: 'POST',
                 body: JSON.stringify(bind),
@@ -94,7 +122,11 @@ createApp({
             });
         },
         async resetBinds() {
-            this.binds = [];
+            this.binds.forEach((bind) => {
+                bind.selectedAction = '';
+                bind.bind_name = '';
+                bind.bind_value = '';
+            });
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:resetBinds`, {
                 method: 'POST',
             }).then(() => {
@@ -105,6 +137,22 @@ createApp({
                     this.message = '';
                 }, 5000);
             });
+        },
+        onBindChange(bind) {
+            if (!bind.selectedAction) {
+                this.deleteBind(bind);
+                return;
+            }
+            const action = this.actions.find(
+                (candidate) => this.actionKey(candidate) === bind.selectedAction
+            );
+            if (!action) {
+                return;
+            }
+            bind.bind_name = action.label;
+            bind.bind_value = action.value;
+            bind.bind_type = action.type;
+            this.saveBind(bind);
         },
     }
 }).mount("#app");

@@ -13,9 +13,11 @@ Citizen.CreateThread(function()
     end
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
-    for k, v in pairs(binds) do
-        if not Config.actionsToBind.events[v.bind_value] then
-            MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {v.char_id})
+    for _, v in pairs(binds) do
+        local validEvent = Config.actionsToBind.events[v.bind_name] == v.bind_value
+        local validCommand = Config.actionsToBind.commands[v.bind_name] == v.bind_value
+        if not validEvent and not validCommand then
+            MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.char_id, v.bind_key})
             print('Bind ' .. v.bind_name .. ' => ' .. v.bind_value .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
         end
     end
@@ -34,12 +36,14 @@ AddEventHandler('moro_keybinds:saveBind', function(bind)
     if not char_id then
         return
     end
-    -- check if the event is allowed
-    if not Config.actionsToBind.events[bind.bind_value] then
+    local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
+    local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
+    if not validEvent and not validCommand then
         print('Tried to bind ' .. bind.bind_name .. ' => ' .. bind.bind_value .. ' from character ' .. jo.framework:getRPName(char_id) .. ', check for possible cheat.')
         return
     end
-    MySQL.update.await('UPDATE moro_keybinds SET bind_name = ?, bind_key = ?, bind_value = ? WHERE char_id = ?', {bind.bind_name, bind.bind_key, bind.bind_value, char_id})
+    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {char_id, bind.bind_key})
+    MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {char_id, bind.bind_name, bind.bind_key, bind.bind_value})
     TriggerClientEvent('moro_keybinds:saveBind', _source, bind)
 end)
 
@@ -50,7 +54,7 @@ AddEventHandler('moro_keybinds:deleteBind', function(bind)
     if not char_id then
         return
     end
-    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {char_id})
+    MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {char_id, bind.bind_key})
     TriggerClientEvent('moro_keybinds:deleteBind', _source, bind)
 end)
 

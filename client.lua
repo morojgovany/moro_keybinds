@@ -1,92 +1,152 @@
-local playerBinds = nil
+local playerBinds = {}
 
-Citizen.CreateThread(function()
-    local keyCooldowns = {}
-    while true do
-        Wait(1)
-        for k, v in pairs(Config.Keys) do
-            local currentTime = GetGameTimer()
-            if not keyCooldowns[k] then keyCooldowns[k] = 0 end
+local function getActionType(bind)
+    if Config.actionsToBind.events[bind.bind_name] == bind.bind_value then
+        return 'event'
+    end
+    if Config.actionsToBind.commands[bind.bind_name] == bind.bind_value then
+        return 'command'
+    end
+    return nil
+end
 
-            if currentTime >= keyCooldowns[k] then
-                if v.trigger == 'keyUp' then
-                    if IsRawKeyReleased(v.hash) then
-                        v.callback()
-                        if v.wait and v.wait > 0 then
-                            keyCooldowns[k] = currentTime + v.wait
-                        end
-                    end
-                elseif v.trigger == 'keyDown' then
-                    if IsRawKeyPressed(v.hash) then
-                        v.callback()
-                        if v.wait and v.wait > 0 then
-                            keyCooldowns[k] = currentTime + v.wait
-                        end
-                    end
-                end
-            end
+local function buildBind(bind)
+    local keyData = Config.customizableKeys[bind.bind_key]
+    if not keyData then
+        return nil
+    end
+
+    local actionType = getActionType(bind)
+    if not actionType then
+        return nil
+    end
+
+    local callback = nil
+    if actionType == 'event' then
+        callback = function()
+            TriggerEvent(bind.bind_value)
+        end
+    elseif actionType == 'command' then
+        callback = function()
+            ExecuteCommand(bind.bind_value)
         end
     end
-end)
 
-Citizen.CreateThread(function()
-    repeat
-        Wait(1000)
-    until playerBinds
-    while true do
-        Wait(1)
-        for k, v in pairs(playerBinds) do
+    return {
+        bind_key = bind.bind_key,
+        bind_name = bind.bind_name,
+        bind_value = bind.bind_value,
+        hash = keyData.hash,
+        wait = keyData.wait,
+        trigger = keyData.trigger,
+        callback = callback,
+    }
+end
+
+local function handleBinds(binds, cooldowns)
+    local currentTime = GetGameTimer()
+    for k, v in pairs(binds) do
+        if not cooldowns[k] then
+            cooldowns[k] = 0
+        end
+
+        if currentTime >= cooldowns[k] then
             if v.trigger == 'keyUp' then
                 if IsRawKeyReleased(v.hash) then
                     v.callback()
                     if v.wait and v.wait > 0 then
-                        keyCooldowns[k] = currentTime + v.wait
+                        cooldowns[k] = currentTime + v.wait
                     end
                 end
             elseif v.trigger == 'keyDown' then
                 if IsRawKeyPressed(v.hash) then
                     v.callback()
                     if v.wait and v.wait > 0 then
-                        keyCooldowns[k] = currentTime + v.wait
+                        cooldowns[k] = currentTime + v.wait
                     end
                 end
             end
         end
     end
+end
+
+Citizen.CreateThread(function()
+    local keyCooldowns = {}
+    while true do
+        Wait(1)
+        handleBinds(Config.Keys, keyCooldowns)
+    end
+end)
+
+Citizen.CreateThread(function()
+    local keyCooldowns = {}
+    while true do
+        Wait(1)
+        if next(playerBinds) ~= nil then
+            handleBinds(playerBinds, keyCooldowns)
+        end
+    end
+end)
+
+local function getActionsForUi()
+    local actions = {}
+    for name, value in pairs(Config.actionsToBind.events) do
+        actions[#actions + 1] = {
+            label = name,
+            type = 'event',
+            value = value,
+        }
+    end
+    for name, value in pairs(Config.actionsToBind.commands) do
+        actions[#actions + 1] = {
+            label = name,
+            type = 'command',
+            value = value,
+        }
+    end
+    return actions
+end
+
+local function getBindsForUi()
+    local binds = {}
+    for keyName, _ in pairs(Config.customizableKeys) do
+        local bind = playerBinds[keyName]
+        binds[#binds + 1] = {
+            bind_key = keyName,
+            bind_name = bind and bind.bind_name or '',
+            bind_value = bind and bind.bind_value or '',
+        }
+    end
+    return binds
+end
+
+RegisterNetEvent('moro_keybinds:openMenu')
+AddEventHandler('moro_keybinds:openMenu', function()
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = 'show',
+        binds = getBindsForUi(),
+        actions = getActionsForUi(),
+    })
 end)
 
 RegisterNetEvent('moro_keybinds:syncBinds')
 AddEventHandler('moro_keybinds:syncBinds', function(binds)
-    for k, v in pairs(binds) do
-        playerBinds[v.bind_key] = v
-    end
-    Citizen.CreateThread(function()
-        while true do
-            Wait(1)
-            for k, v in pairs(playerBinds) do
-                if v.trigger == 'keyUp' then
-                    if IsRawKeyReleased(v.hash) then
-                        v.callback()
-                        if v.wait and v.wait > 0 then
-                            keyCooldowns[k] = currentTime + v.wait
-                        end
-                    end
-                elseif v.trigger == 'keyDown' then
-                    if IsRawKeyPressed(v.hash) then
-                        v.callback()
-                        if v.wait and v.wait > 0 then
-                            keyCooldowns[k] = currentTime + v.wait
-                        end
-                    end
-                end
-            end
+    playerBinds = {}
+    for _, v in pairs(binds) do
+        local bind = buildBind(v)
+        if bind then
+            playerBinds[v.bind_key] = bind
         end
-    end)
+    end
 end)
 
 RegisterNetEvent('moro_keybinds:saveBind')
 AddEventHandler('moro_keybinds:saveBind', function(bind)
-    playerBinds[bind.bind_key] = bind
+    local playerBind = buildBind(bind)
+    if playerBind then
+        playerBinds[bind.bind_key] = playerBind
+    end
 end)
 
 RegisterNetEvent('moro_keybinds:deleteBind')

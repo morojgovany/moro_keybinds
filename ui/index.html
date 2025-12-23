@@ -16,17 +16,19 @@
                 <div class="binds">
                     <div class="bind" v-for="bind in binds" :key="bind.bind_key">
                         <h2>{{ bind.bind_key }}</h2>
-                        <select v-model="bind.bind_event">
-                            <option v-for="bindEvent in optionList" :key="bindEvent" :value="bindEvent">
-                                {{ bindEvent }}
+                        <select v-model="bind.selectedAction" @change="onBindChange(bind)">
+                            <option value="">Aucun</option>
+                            <option v-for="action in availableActions(bind)" :key="actionKey(action)"
+                                :value="actionKey(action)">
+                                {{ action.label }}
                             </option>
                         </select>
+                        <button @click="deleteBind(bind)" :disabled="!bind.selectedAction">Supprimer</button>
                     </div>
                 </div>
             </div>
             <div class="footer">
                 <button @click="resetBinds">Reset</button>
-                <button @click="saveBind">Save</button>
             </div>
         </div>
     </div>
