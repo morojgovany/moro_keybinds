@@ -84,6 +84,18 @@ Config.customizableKeys = {
         trigger = 'keyUp',
     },
 }
+Config.customizableKeysOrder = {
+    'NUMPAD_1',
+    'NUMPAD_2',
+    'NUMPAD_3',
+    'NUMPAD_4',
+    'NUMPAD_5',
+    'NUMPAD_6',
+    'NUMPAD_7',
+    'NUMPAD_8',
+    'NUMPAD_9',
+    'NUMPAD_0',
+}
 
 -- The actions to bind are the actions that the player is allowed to bind to the customizable keys
 Config.actionsToBind = {

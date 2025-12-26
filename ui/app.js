@@ -63,13 +63,10 @@ createApp({
             return fallback !== undefined ? fallback : path;
         },
         actionKey(action) {
-            return `${action.type}:${action.value}`;
+            return `${action.type}:${action.label}`;
         },
         normalizeBind(bind) {
-            const action = this.actions.find(
-                (candidate) =>
-                    candidate.label === bind.bind_name && candidate.value === bind.bind_value
-            );
+            const action = this.actions.find((candidate) => candidate.label === bind.bind_name);
             return {
                 ...bind,
                 selectedAction: action ? this.actionKey(action) : '',

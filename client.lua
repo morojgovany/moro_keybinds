@@ -34,14 +34,46 @@ local function resolveLocale()
     return 'en'
 end
 
+local function decodeBindValue(bindValue)
+    if type(bindValue) == 'string' then
+        local ok, decoded = pcall(json.decode, bindValue)
+        if ok and type(decoded) == 'table' then
+            return decoded
+        end
+    end
+    return bindValue
+end
+
+local function argsMatch(expectedArgs, actualArgs)
+    if expectedArgs == nil and actualArgs == nil then
+        return true
+    end
+    if type(expectedArgs) ~= 'table' or type(actualArgs) ~= 'table' then
+        return false
+    end
+    if #expectedArgs ~= #actualArgs then
+        return false
+    end
+    for i = 1, #expectedArgs do
+        if expectedArgs[i] ~= actualArgs[i] then
+            return false
+        end
+    end
+    return true
+end
+
 local function getActionType(bind)
-    if Config.actionsToBind.clientEvents[bind.bind_name] == bind.bind_value then
+    local bindValue = decodeBindValue(bind.bind_value)
+    local clientAction = Config.actionsToBind.clientEvents[bind.bind_name]
+    if clientAction and bindValue.event == clientAction.event and argsMatch(clientAction.args, bindValue.args) then
         return 'clientEvent'
     end
-    if Config.actionsToBind.serverEvents[bind.bind_name] == bind.bind_value then
+    local serverAction = Config.actionsToBind.serverEvents[bind.bind_name]
+    if serverAction and bindValue.event == serverAction.event and argsMatch(serverAction.args, bindValue.args) then
         return 'serverEvent'
     end
-    if Config.actionsToBind.commands[bind.bind_name] == bind.bind_value then
+    local commandAction = Config.actionsToBind.commands[bind.bind_name]
+    if commandAction and bindValue.command == commandAction.command and argsMatch(commandAction.args, bindValue.args) then
         return 'command'
     end
     return nil
@@ -58,37 +90,38 @@ local function buildBind(bind)
         return nil
     end
 
+    local bindValue = decodeBindValue(bind.bind_value)
     local callback = nil
     if actionType == 'clientEvent' then
         callback = function()
             local args = {}
-            for _, arg in ipairs(bind.bind_value.args) do
+            for _, arg in ipairs(bindValue.args or {}) do
                 args[#args + 1] = arg
             end
-            TriggerEvent(bind.bind_value.event, unpack(args))
+            TriggerEvent(bindValue.event, unpack(args))
         end
     elseif actionType == 'serverEvent' then
         callback = function()
             local args = {}
-            for _, arg in ipairs(bind.bind_value.args) do
+            for _, arg in ipairs(bindValue.args or {}) do
                 args[#args + 1] = arg
             end
-            TriggerServerEvent(bind.bind_value.event, unpack(args))
+            TriggerServerEvent(bindValue.event, unpack(args))
         end
     elseif actionType == 'command' then
         callback = function()
             local args = {}
-            for _, arg in ipairs(bind.bind_value.args) do
+            for _, arg in ipairs(bindValue.args or {}) do
                 args[#args + 1] = arg
             end
-            ExecuteCommand(bind.bind_value.command, unpack(args))
+            ExecuteCommand(bindValue.command, unpack(args))
         end
     end
 
     return {
         bind_key = bind.bind_key,
         bind_name = bind.bind_name,
-        bind_value = bind.bind_value,
+        bind_value = bindValue,
         hash = keyData.hash,
         wait = keyData.wait,
         trigger = keyData.trigger,
@@ -167,9 +200,21 @@ local function getActionsForUi()
     return actions
 end
 
+local function getCustomizableKeyOrder()
+    if type(Config.customizableKeysOrder) == 'table' then
+        return Config.customizableKeysOrder
+    end
+    local keys = {}
+    for keyName, _ in pairs(Config.customizableKeys) do
+        keys[#keys + 1] = keyName
+    end
+    table.sort(keys)
+    return keys
+end
+
 local function getBindsForUi()
     local binds = {}
-    for keyName, _ in pairs(Config.customizableKeys) do
+    for _, keyName in ipairs(getCustomizableKeyOrder()) do
         local bind = playerBinds[keyName]
         binds[#binds + 1] = {
             bind_key = keyName,
@@ -197,7 +242,7 @@ end)
 RegisterNetEvent('moro_keybinds:syncBinds')
 AddEventHandler('moro_keybinds:syncBinds', function(binds)
     playerBinds = {}
-    for _, v in pairs(binds) do
+    for _, v in ipairs(binds) do
         local bind = buildBind(v)
         if bind then
             playerBinds[v.bind_key] = bind
