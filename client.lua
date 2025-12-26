@@ -61,15 +61,27 @@ local function buildBind(bind)
     local callback = nil
     if actionType == 'clientEvent' then
         callback = function()
-            TriggerEvent(bind.bind_value)
+            local args = {}
+            for _, arg in ipairs(bind.bind_value.args) do
+                args[#args + 1] = arg
+            end
+            TriggerEvent(bind.bind_value.event, unpack(args))
         end
     elseif actionType == 'serverEvent' then
         callback = function()
-            TriggerServerEvent(bind.bind_value)
+            local args = {}
+            for _, arg in ipairs(bind.bind_value.args) do
+                args[#args + 1] = arg
+            end
+            TriggerServerEvent(bind.bind_value.event, unpack(args))
         end
     elseif actionType == 'command' then
         callback = function()
-            ExecuteCommand(bind.bind_value)
+            local args = {}
+            for _, arg in ipairs(bind.bind_value.args) do
+                args[#args + 1] = arg
+            end
+            ExecuteCommand(bind.bind_value.command, unpack(args))
         end
     end
 

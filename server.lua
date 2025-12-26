@@ -3,7 +3,7 @@ Citizen.CreateThread(function()
     char_id INT NOT NULL DEFAULT 0,
     bind_name VARCHAR(50) NOT NULL DEFAULT '',
     bind_key VARCHAR(50) NOT NULL DEFAULT '',
-    bind_value VARCHAR(50) NOT NULL DEFAULT '']])
+    bind_value TEXT NOT NULL DEFAULT '']])
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
     for _, v in pairs(binds) do
@@ -24,6 +24,15 @@ jo.framework:onCharacterSelected(function(source)
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {charId})
     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
 end)
+RegisterNetEvent('moro_keybinds:syncBinds')
+AddEventHandler('moro_keybinds:syncBinds', function(payload)
+    local _source = source
+    local identifiers = jo.framework:getUserIdentifiers(_source)
+    local charId = identifiers.charid
+    local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {charId})
+    print(json.encode(binds))
+    TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
+end)
 
 RegisterNetEvent('moro_keybinds:saveBinds')
 AddEventHandler('moro_keybinds:saveBinds', function(payload)
@@ -41,11 +50,11 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
     local validBinds = {}
     for _, bind in ipairs(binds) do
         if type(bind) == 'table' then
-            local validClientEvent = Config.actionsToBind.clientEvents[bind.bind_name] == bind.bind_value
-            local validServerEvent = Config.actionsToBind.serverEvents[bind.bind_name] == bind.bind_value
-            local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
+            local validClientEvent = Config.actionsToBind.clientEvents[bind.bind_name] == bind.bind_value.event
+            local validServerEvent = Config.actionsToBind.serverEvents[bind.bind_name] == bind.bind_value.event
+            local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value.command
             if validClientEvent or validServerEvent or validCommand then
-                MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {charId, bind.bind_name, bind.bind_key, bind.bind_value})
+                MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {charId, bind.bind_name, bind.bind_key, json.encode(bind.bind_value)})
                 validBinds[#validBinds + 1] = bind
             else
                 print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. tostring(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(charId) .. ', check for possible cheat.')
