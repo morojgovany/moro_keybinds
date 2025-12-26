@@ -1,5 +1,6 @@
 local playerBinds = {}
 local localesCache = nil
+local unpack = table.unpack or unpack
 
 local function loadLocales()
     if localesCache then
