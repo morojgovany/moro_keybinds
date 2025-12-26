@@ -27,6 +27,7 @@ local function argsMatch(expectedArgs, actualArgs)
 end
 
 local function isValidBind(bindName, bindValue)
+    -- FIXME: now bindvalue is a string and the key ot the table is the label of the bind
     if type(bindValue) ~= 'table' then
         return false
     end

@@ -120,10 +120,8 @@ Config.actionsToBind = {
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     -- Remove the / used before the command name in chat
     commands = {
-        ['Reload skin'] = {
-            command = 'rc',
-            args = {}
-        }
+        ['Reload skin'] = 'rc',
+        ['Prout'] = 'playSound fart ./sounds/fart.mp3 1.0 0 30'
     },
 
 }
