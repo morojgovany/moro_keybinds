@@ -1,5 +1,6 @@
 // Dev-only locale loader (no async calls)
 // Keep in sync with locales.json
+// These translations were IA generated, please review and correct any errors
 window.MoroKeybindsLocales = {
   "en": {
     "ui": {

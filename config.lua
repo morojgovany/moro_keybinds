@@ -89,15 +89,17 @@ Config.customizableKeys = {
 Config.actionsToBind = {
     -- Events that can be binded to the customizable keys (triggered by TriggerEvent)
     clientEvents = {
-        ['Notification'] = 'moro_notifications:TipRight',
+        ['Notification'] = 'moro_notifications:TipRight', -- Key is the label displayed for the player, value is the eventname:action
     },
 
     -- Server events that can be binded to the customizable keys (triggered by TriggerServerEvent)
     serverEvents = {
+        [''] = '',
     },
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
+    -- Remove the / used before the command name in chat
     commands = {
-        ['Reload skin'] = 'rc',
+        ['Reload skin'] = 'rc', -- is /rc for vorp
     },
 
 }

@@ -13,4 +13,10 @@ It simply binds unused redm keys to events, commands or any callback function.
 - Use as many keybinds as you want but use carefully it can conflict with other scripts
 - You can add a wait time after the callback to prevent spam
 
+## *Translations*
+- Open `locales.json` and add your translations
+- You can add as many languages as you want
+- For dev purposes, use `locales.dev.js` to test your translations
+*Translations were IA generated, please review and correct any errors*
+
 ### **:warning: Note: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout.**

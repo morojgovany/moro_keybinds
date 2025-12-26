@@ -7,11 +7,12 @@ Citizen.CreateThread(function()
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
     for _, v in pairs(binds) do
-        local validEvent = Config.actionsToBind.events[v.bind_name] == v.bind_value
+        local validClientEvent = Config.actionsToBind.clientEvents[v.bind_name] == v.bind_value
+        local validServerEvent = Config.actionsToBind.serverEvents[v.bind_name] == v.bind_value
         local validCommand = Config.actionsToBind.commands[v.bind_name] == v.bind_value
-        if not validEvent and not validCommand then
-            MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.charId, v.bind_key})
-            print('Bind ' .. v.bind_name .. ' => ' .. v.bind_value .. ' from character ' .. jo.framework:getRPName(v.charId) .. ' deleted, check for possible cheat.')
+        if not validClientEvent and not validServerEvent and not validCommand then
+            MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.char_id, v.bind_key})
+            print('Bind ' .. v.bind_name .. ' => ' .. v.bind_value .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
         end
     end
 end)
@@ -40,9 +41,10 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
     local validBinds = {}
     for _, bind in ipairs(binds) do
         if type(bind) == 'table' then
-            local validEvent = Config.actionsToBind.events[bind.bind_name] == bind.bind_value
+            local validClientEvent = Config.actionsToBind.clientEvents[bind.bind_name] == bind.bind_value
+            local validServerEvent = Config.actionsToBind.serverEvents[bind.bind_name] == bind.bind_value
             local validCommand = Config.actionsToBind.commands[bind.bind_name] == bind.bind_value
-            if validEvent or validCommand then
+            if validClientEvent or validServerEvent or validCommand then
                 MySQL.insert.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?)', {charId, bind.bind_name, bind.bind_key, bind.bind_value})
                 validBinds[#validBinds + 1] = bind
             else

@@ -35,8 +35,11 @@ local function resolveLocale()
 end
 
 local function getActionType(bind)
-    if Config.actionsToBind.events[bind.bind_name] == bind.bind_value then
-        return 'event'
+    if Config.actionsToBind.clientEvents[bind.bind_name] == bind.bind_value then
+        return 'clientEvent'
+    end
+    if Config.actionsToBind.serverEvents[bind.bind_name] == bind.bind_value then
+        return 'serverEvent'
     end
     if Config.actionsToBind.commands[bind.bind_name] == bind.bind_value then
         return 'command'
@@ -56,9 +59,13 @@ local function buildBind(bind)
     end
 
     local callback = nil
-    if actionType == 'event' then
+    if actionType == 'clientEvent' then
         callback = function()
             TriggerEvent(bind.bind_value)
+        end
+    elseif actionType == 'serverEvent' then
+        callback = function()
+            TriggerServerEvent(bind.bind_value)
         end
     elseif actionType == 'command' then
         callback = function()
@@ -124,10 +131,17 @@ end)
 
 local function getActionsForUi()
     local actions = {}
-    for name, value in pairs(Config.actionsToBind.events) do
+    for name, value in pairs(Config.actionsToBind.clientEvents) do
         actions[#actions + 1] = {
             label = name,
-            type = 'event',
+            type = 'clientEvent',
+            value = value,
+        }
+    end
+    for name, value in pairs(Config.actionsToBind.serverEvents) do
+        actions[#actions + 1] = {
+            label = name,
+            type = 'serverEvent',
             value = value,
         }
     end
