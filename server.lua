@@ -1,46 +1,14 @@
-local function decodeBindValue(bindValue)
-    if type(bindValue) == 'string' then
-        local ok, decoded = pcall(json.decode, bindValue)
-        if ok and type(decoded) == 'table' then
-            return decoded
-        end
-    end
-    return bindValue
-end
-
-local function argsMatch(expectedArgs, actualArgs)
-    if expectedArgs == nil and actualArgs == nil then
-        return true
-    end
-    if type(expectedArgs) ~= 'table' or type(actualArgs) ~= 'table' then
-        return false
-    end
-    if #expectedArgs ~= #actualArgs then
-        return false
-    end
-    for i = 1, #expectedArgs do
-        if expectedArgs[i] ~= actualArgs[i] then
-            return false
-        end
-    end
-    return true
-end
-
 local function isValidBind(bindName, bindValue)
-    -- FIXME: now bindvalue is a string and the key ot the table is the label of the bind
-    if type(bindValue) ~= 'table' then
-        return false
-    end
     local clientAction = Config.actionsToBind.clientEvents[bindName]
-    if clientAction and bindValue.event == clientAction.event and argsMatch(clientAction.args, bindValue.args) then
+    if clientAction and type(bindValue) == 'table' and bindValue.event == clientAction.event then
         return true
     end
     local serverAction = Config.actionsToBind.serverEvents[bindName]
-    if serverAction and bindValue.event == serverAction.event and argsMatch(serverAction.args, bindValue.args) then
+    if serverAction and type(bindValue) == 'table' and bindValue.event == serverAction.event then
         return true
     end
     local commandAction = Config.actionsToBind.commands[bindName]
-    if commandAction and bindValue.command == commandAction.command and argsMatch(commandAction.args, bindValue.args) then
+    if commandAction and type(bindValue) == 'string' and bindValue == commandAction then
         return true
     end
     return false
@@ -56,7 +24,8 @@ Citizen.CreateThread(function()
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
     for _, v in ipairs(binds) do
-        local bindValue = decodeBindValue(v.bind_value)
+        local ok, decoded = pcall(json.decode, v.bind_value)
+        local bindValue = ok and decoded or v.bind_value
         if not isValidBind(v.bind_name, bindValue) then
             MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.char_id, v.bind_key})
             print('Bind ' .. v.bind_name .. ' => ' .. v.bind_value .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
@@ -70,7 +39,8 @@ jo.framework:onCharacterSelected(function(source)
     local charId = identifiers.charid
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {charId})
     for _, bind in ipairs(binds) do
-        bind.bind_value = decodeBindValue(bind.bind_value)
+        local ok, decoded = pcall(json.decode, bind.bind_value)
+        bind.bind_value = ok and decoded or bind.bind_value
     end
     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
 end)
@@ -81,7 +51,8 @@ AddEventHandler('moro_keybinds:syncBinds', function(payload)
     local charId = identifiers.charid
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds WHERE char_id = ?', {charId})
     for _, bind in ipairs(binds) do
-        bind.bind_value = decodeBindValue(bind.bind_value)
+        local ok, decoded = pcall(json.decode, bind.bind_value)
+        bind.bind_value = ok and decoded or bind.bind_value
     end
     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
 end)

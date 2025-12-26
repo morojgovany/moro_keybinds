@@ -35,46 +35,18 @@ local function resolveLocale()
     return 'en'
 end
 
-local function decodeBindValue(bindValue)
-    if type(bindValue) == 'string' then
-        local ok, decoded = pcall(json.decode, bindValue)
-        if ok and type(decoded) == 'table' then
-            return decoded
-        end
-    end
-    return bindValue
-end
-
-local function argsMatch(expectedArgs, actualArgs)
-    if expectedArgs == nil and actualArgs == nil then
-        return true
-    end
-    if type(expectedArgs) ~= 'table' or type(actualArgs) ~= 'table' then
-        return false
-    end
-    if #expectedArgs ~= #actualArgs then
-        return false
-    end
-    for i = 1, #expectedArgs do
-        if expectedArgs[i] ~= actualArgs[i] then
-            return false
-        end
-    end
-    return true
-end
-
 local function getActionType(bind)
-    local bindValue = decodeBindValue(bind.bind_value)
+    local bindValue = bind.bind_value
     local clientAction = Config.actionsToBind.clientEvents[bind.bind_name]
-    if clientAction and bindValue.event == clientAction.event and argsMatch(clientAction.args, bindValue.args) then
+    if clientAction and type(bindValue) == 'table' and bindValue.event == clientAction.event then
         return 'clientEvent'
     end
     local serverAction = Config.actionsToBind.serverEvents[bind.bind_name]
-    if serverAction and bindValue.event == serverAction.event and argsMatch(serverAction.args, bindValue.args) then
+    if serverAction and type(bindValue) == 'table' and bindValue.event == serverAction.event then
         return 'serverEvent'
     end
     local commandAction = Config.actionsToBind.commands[bind.bind_name]
-    if commandAction and bindValue.command == commandAction.command and argsMatch(commandAction.args, bindValue.args) then
+    if commandAction and type(bindValue) == 'string' and bindValue == commandAction then
         return 'command'
     end
     return nil
@@ -91,7 +63,7 @@ local function buildBind(bind)
         return nil
     end
 
-    local bindValue = decodeBindValue(bind.bind_value)
+    local bindValue = bind.bind_value
     local callback = nil
     if actionType == 'clientEvent' then
         callback = function()
@@ -111,11 +83,7 @@ local function buildBind(bind)
         end
     elseif actionType == 'command' then
         callback = function()
-            local args = {}
-            for _, arg in ipairs(bindValue.args or {}) do
-                args[#args + 1] = arg
-            end
-            ExecuteCommand(bindValue.command, unpack(args))
+            ExecuteCommand(bindValue)
         end
     end
 
