@@ -1,5 +1,6 @@
 Config = {}
 Config.Locale = 'en'
+Config.devMode = false
 -- REMEMBER: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout. And it can lead to conflicts with other scripts.
 -- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
@@ -107,7 +108,7 @@ Config.actionsToBind = {
                 'test',
                 5000
             }
-        }, -- Key is the label displayed for the player, value is the eventname:action
+        }, -- the key is the label displayed for the player, the event is the eventname:action, the args are the arguments passed to the event
     },
 
     -- Server events that can be binded to the customizable keys (triggered by TriggerServerEvent)
@@ -120,8 +121,7 @@ Config.actionsToBind = {
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     -- Remove the / used before the command name in chat
     commands = {
-        ['Reload skin'] = 'rc',
-        ['Prout'] = 'playSound fart ./sounds/fart.mp3 1.0 0 30'
+        ['Reload skin'] = 'rc'
     },
 
 }

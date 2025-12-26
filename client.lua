@@ -253,3 +253,7 @@ end)
 RegisterCommand('keybinds', function()
     TriggerEvent('moro_keybinds:openMenu')
 end)
+
+if Config.devMode then
+    TriggerServerEvent('moro_keybinds:syncBinds')
+end
