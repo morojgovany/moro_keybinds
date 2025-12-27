@@ -1,6 +1,6 @@
 Config = {}
 Config.Locale = 'en'
-Config.devMode = false
+Config.devMode = false -- set to true if you want to restart the script live
 -- REMEMBER: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout. And it can lead to conflicts with other scripts.
 -- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 
@@ -23,7 +23,7 @@ Config.Keys = {
             while not HasAnimDictLoaded('ai_gestures@gen_female@standing@silent') do
                 Wait(100)
             end
-            TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_neutral_greet_f_002', 1.0, 1.0, -1, 1, 0, false, false, false, 0, true)
+            TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_flirty_greet_r_001', 1.0, 1.0, -1, 1, 0, false, false, false, 0, true)
             RemoveAnimDict('ai_gestures@gen_female@standing@silent')
             Wait(5000)
             ClearPedTasks(PlayerPedId())
@@ -124,4 +124,9 @@ Config.actionsToBind = {
         ['Reload skin'] = 'rc'
     },
 
+}
+
+Config.notifications = {
+    saveBinds = 'Binds saved!',
+    error = 'An error occurred',
 }

@@ -44,6 +44,7 @@ jo.framework:onCharacterSelected(function(source)
     end
     TriggerClientEvent('moro_keybinds:syncBinds', _source, binds)
 end)
+
 RegisterNetEvent('moro_keybinds:syncBinds')
 AddEventHandler('moro_keybinds:syncBinds', function(payload)
     local _source = source
@@ -77,6 +78,7 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
                 MySQL.update.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE bind_name = VALUES(bind_name), bind_value = VALUES(bind_value)', {charId, bind.bind_name, bind.bind_key, json.encode(bind.bind_value)})
                 validBinds[#validBinds + 1] = bind
             else
+                jo.notif.right(_source, Config.notifications.error, 'hud_textures', 'check', 'COLOR_RED', 5000)
                 print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. tostring(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(charId) .. ', check for possible cheat.')
             end
         end
@@ -94,6 +96,7 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
         MySQL.update.await(('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key NOT IN (%s)'):format(table.concat(placeholders, ',')), values)
     end
 
+    jo.notif.right(_source, Config.notifications.saveBinds, 'hud_textures', 'check', 'COLOR_GREEN', 5000)
     TriggerClientEvent('moro_keybinds:syncBinds', _source, validBinds)
 end)
 
