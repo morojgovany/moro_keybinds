@@ -1,3 +1,5 @@
+local content, resource, modPath = jo.file.read('moro_keybinds.locales')
+local locales = json.decode(content)
 local function isValidBind(bindName, bindValue)
     local clientAction = Config.actionsToBind.clientEvents[bindName]
     if clientAction and type(bindValue) == 'table' and bindValue.event == clientAction.event then
@@ -28,7 +30,7 @@ Citizen.CreateThread(function()
         local bindValue = ok and decoded or v.bind_value
         if not isValidBind(v.bind_name, bindValue) then
             MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.char_id, v.bind_key})
-            print('Bind ' .. v.bind_name .. ' => ' .. v.bind_value .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
+            print('Bind ' .. v.bind_name .. ' => ' .. json.encode(v.bind_value) .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
         end
     end
 end)
@@ -78,8 +80,8 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
                 MySQL.update.await('INSERT INTO moro_keybinds (char_id, bind_name, bind_key, bind_value) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE bind_name = VALUES(bind_name), bind_value = VALUES(bind_value)', {charId, bind.bind_name, bind.bind_key, json.encode(bind.bind_value)})
                 validBinds[#validBinds + 1] = bind
             else
-                jo.notif.right(_source, Config.notifications.error, 'hud_textures', 'check', 'COLOR_RED', 5000)
-                print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. tostring(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(charId) .. ', check for possible cheat.')
+                jo.notif.right(_source, locales.messages.error, 'hud_textures', 'check', 'COLOR_RED', 5000)
+                print('Tried to bind ' .. tostring(bind.bind_name) .. ' => ' .. json.encode(bind.bind_value) .. ' from character ' .. jo.framework:getRPName(charId) .. ', check for possible cheat.')
             end
         end
     end
@@ -96,7 +98,7 @@ AddEventHandler('moro_keybinds:saveBinds', function(payload)
         MySQL.update.await(('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key NOT IN (%s)'):format(table.concat(placeholders, ',')), values)
     end
 
-    jo.notif.right(_source, Config.notifications.saveBinds, 'hud_textures', 'check', 'COLOR_GREEN', 5000)
+    jo.notif.right(_source, locales.messages.bindSaved, 'hud_textures', 'check', 'COLOR_GREEN', 5000)
     TriggerClientEvent('moro_keybinds:syncBinds', _source, validBinds)
 end)
 
@@ -106,6 +108,7 @@ AddEventHandler('moro_keybinds:deleteBind', function(bind)
     local identifiers = jo.framework:getUserIdentifiers(_source)
     local charId = identifiers.charid
     MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {charId, bind.bind_key})
+    jo.notif.right(_source, locales.messages.bindDeleted, 'hud_textures', 'check', 'COLOR_GREEN', 5000)
     TriggerClientEvent('moro_keybinds:deleteBind', _source, bind)
 end)
 
@@ -115,5 +118,6 @@ AddEventHandler('moro_keybinds:resetBinds', function()
     local identifiers = jo.framework:getUserIdentifiers(_source)
     local charId = identifiers.charid
     MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ?', {charId})
+    jo.notif.right(_source, locales.messages.bindsReset, 'hud_textures', 'check', 'COLOR_GREEN', 5000)
     TriggerClientEvent('moro_keybinds:resetBinds', _source)
 end)

@@ -1,4 +1,5 @@
 const { createApp, nextTick } = Vue;
+import locales from './locales.json';
 createApp({
     data() {
         return {
@@ -6,19 +7,20 @@ createApp({
             visible: false,
             binds: [],
             actions: [],
-            locales: {},
+            locales,
             locale: 'en', // change this to change the locale ONLY IN DEVMODE
             translations: {},
             fallbackTranslations: {},
             pendingChanges: false,
         };
     },
+    watch: {
+        locale() {
+            this.applyLocale()
+        }
+    },
     mounted() {
         if (this.devMode) {
-            if (window.MoroKeybindsLocales) {
-                const locale = window.MoroKeybindsLocale || this.locale;
-                this.setLocales(window.MoroKeybindsLocales, locale);
-            }
             this.visible = true;
             this.actions = [
                 { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
@@ -37,6 +39,7 @@ createApp({
                 { bind_key: 'NUMPAD_0', bind_name: '', bind_value: '', selectedAction: '' },
             ];
         }
+        this.applyLocale()
         window.addEventListener("message", this.onMessage);
     },
     computed: {
@@ -45,14 +48,12 @@ createApp({
         },
     },
     methods: {
+        applyLocale() {
+            this.translations = this.locales?.[this.locale] ?? {}
+            this.fallbackTranslations = this.locales?.en ?? {}
+        },
         getNestedValue(target, path) {
             return path.split('.').reduce((acc, key) => (acc && acc[key] !== undefined ? acc[key] : undefined), target);
-        },
-        setLocales(locales, locale) {
-            this.locales = locales || {};
-            this.locale = locale || this.locale;
-            this.translations = this.locales[this.locale] || {};
-            this.fallbackTranslations = this.locales.en || {};
         },
         t(path) {
             const value = this.getNestedValue(this.translations, path);
@@ -90,7 +91,8 @@ createApp({
                     this.actions = message.actions || [];
                     this.binds = (message.binds || []).map((bind) => this.normalizeBind(bind));
                     if (message.locales) {
-                        this.setLocales(message.locales, message.locale || this.locale);
+                        this.translations = message.locales[this.locale] || {};
+                        this.fallbackTranslations = message.locales.en || {};
                     }
                     this.visible = true;
                     this.pendingChanges = false;

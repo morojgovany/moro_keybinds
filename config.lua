@@ -10,6 +10,9 @@ Config.Keys = {
         hash = 0x4B, -- The hash of the key
         callback = function() -- example of command executed when the key is pressed
             ExecuteCommand('rc')
+            -- Or use events
+            --[[ TriggerServerEvent('') -- example of server event
+            TriggerEvent('') -- example of client event ]]
         end,
         wait = 1000, -- The wait time in milliseconds before the key can be pressed again
         trigger = 'keyUp', -- The trigger of the key, can be 'keyUp' or 'keyDown'
@@ -17,8 +20,6 @@ Config.Keys = {
     Y = {
         hash = 0x59,
         callback = function()
-            --[[ TriggerServerEvent('') -- example of server event
-            TriggerEvent('') -- example of client event ]]
             RequestAnimDict('ai_gestures@gen_female@standing@silent')
             while not HasAnimDictLoaded('ai_gestures@gen_female@standing@silent') do
                 Wait(100)
@@ -34,68 +35,68 @@ Config.Keys = {
 }
 -- The customizable keys are the keys that the player can assign to actions, be careful of conflicts with other scripts & remember that depends on the keyboard layout of the player
 Config.customizableKeys = {
-    NUMPAD_1 = {
+    ['NUMPAD 1'] = {
         hash = 0x61,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_2 = {
+    ['NUMPAD 2'] = {
         hash = 0x62,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_3 = {
+    ['NUMPAD 3'] = {
         hash = 0x63,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_4 = {
+    ['NUMPAD 4'] = {
         hash = 0x64,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_5 = {
+    ['NUMPAD 5'] = {
         hash = 0x65,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_6 = {
+    ['NUMPAD 6'] = {
         hash = 0x66,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_7 = {
+    ['NUMPAD 7'] = {
         hash = 0x67,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_8 = {
+    ['NUMPAD 8'] = {
         hash = 0x68,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_9 = {
+    ['NUMPAD 9'] = {
         hash = 0x69,
         wait = 1000,
         trigger = 'keyUp',
     },
-    NUMPAD_0 = {
+    ['NUMPAD 0'] = {
         hash = 0x60,
         wait = 1000,
         trigger = 'keyUp',
     },
 }
 Config.customizableKeysOrder = {
-    'NUMPAD_1',
-    'NUMPAD_2',
-    'NUMPAD_3',
-    'NUMPAD_4',
-    'NUMPAD_5',
-    'NUMPAD_6',
-    'NUMPAD_7',
-    'NUMPAD_8',
-    'NUMPAD_9',
-    'NUMPAD_0',
+    'NUMPAD 1',
+    'NUMPAD 2',
+    'NUMPAD 3',
+    'NUMPAD 4',
+    'NUMPAD 5',
+    'NUMPAD 6',
+    'NUMPAD 7',
+    'NUMPAD 8',
+    'NUMPAD 9',
+    'NUMPAD 0',
 }
 
 -- The actions to bind are the actions that the player is allowed to bind to the customizable keys
@@ -124,9 +125,4 @@ Config.actionsToBind = {
         ['Reload skin'] = 'rc'
     },
 
-}
-
-Config.notifications = {
-    saveBinds = 'Binds saved!',
-    error = 'An error occurred',
 }

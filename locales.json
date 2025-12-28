@@ -12,7 +12,8 @@
     "messages": {
       "bindSaved": "Bind saved",
       "bindDeleted": "Bind deleted",
-      "bindsReset": "Binds reset"
+      "bindsReset": "Binds reset",
+      "error": "An error occurred"
     }
   },
   "fr": {
@@ -28,7 +29,8 @@
     "messages": {
       "bindSaved": "Raccourci enregistré",
       "bindDeleted": "Raccourci supprimé",
-      "bindsReset": "Raccourcis réinitialisés"
+      "bindsReset": "Raccourcis réinitialisés",
+      "error": "Une erreur est survenue"
     }
   },
   "es": {
@@ -44,7 +46,8 @@
     "messages": {
       "bindSaved": "Atajo guardado",
       "bindDeleted": "Atajo eliminado",
-      "bindsReset": "Atajos restablecidos"
+      "bindsReset": "Atajos restablecidos",
+      "error": "Ocurrió un error"
     }
   },
   "de": {
@@ -60,7 +63,8 @@
     "messages": {
       "bindSaved": "Belegung gespeichert",
       "bindDeleted": "Belegung gelöscht",
-      "bindsReset": "Belegungen zurückgesetzt"
+      "bindsReset": "Belegungen zurückgesetzt",
+      "error": "Ein Fehler ist aufgetreten"
     }
   },
   "it": {
@@ -76,7 +80,8 @@
     "messages": {
       "bindSaved": "Tasto salvato",
       "bindDeleted": "Tasto eliminato",
-      "bindsReset": "Tasti reimpostati"
+      "bindsReset": "Tasti reimpostati",
+      "error": "Si è verificato un errore"
     }
   },
   "pt": {
@@ -92,7 +97,8 @@
     "messages": {
       "bindSaved": "Atalho salvo",
       "bindDeleted": "Atalho excluído",
-      "bindsReset": "Atalhos redefinidos"
+      "bindsReset": "Atalhos redefinidos",
+      "error": "Ocorreu um erro"
     }
   },
   "ru": {
@@ -108,7 +114,8 @@
     "messages": {
       "bindSaved": "Назначение сохранено",
       "bindDeleted": "Назначение удалено",
-      "bindsReset": "Назначения сброшены"
+      "bindsReset": "Назначения сброшены",
+      "error": "Произошла ошибка"
     }
   },
   "nl": {
@@ -124,7 +131,8 @@
     "messages": {
       "bindSaved": "Sneltoets opgeslagen",
       "bindDeleted": "Sneltoets verwijderd",
-      "bindsReset": "Sneltoetsen gereset"
+      "bindsReset": "Sneltoetsen gereset",
+      "error": "Er is een fout opgetreden"
     }
   },
   "pl": {
@@ -140,7 +148,8 @@
     "messages": {
       "bindSaved": "Skrót zapisany",
       "bindDeleted": "Skrót usunięty",
-      "bindsReset": "Skróty zresetowane"
+      "bindsReset": "Skróty zresetowane",
+      "error": "Wystąpił błąd"
     }
   },
   "tr": {
@@ -156,7 +165,8 @@
     "messages": {
       "bindSaved": "Kısayol kaydedildi",
       "bindDeleted": "Kısayol silindi",
-      "bindsReset": "Kısayollar sıfırlandı"
+      "bindsReset": "Kısayollar sıfırlandı",
+      "error": "Bir hata oluştu"
     }
   },
   "ar": {
@@ -172,7 +182,8 @@
     "messages": {
       "bindSaved": "تم حفظ الاختصار",
       "bindDeleted": "تم حذف الاختصار",
-      "bindsReset": "تمت إعادة تعيين الاختصارات"
+      "bindsReset": "تمت إعادة تعيين الاختصارات",
+      "error": "حدث خطأ"
     }
   },
   "zh": {
@@ -188,7 +199,8 @@
     "messages": {
       "bindSaved": "快捷键已保存",
       "bindDeleted": "快捷键已删除",
-      "bindsReset": "快捷键已重置"
+      "bindsReset": "快捷键已重置",
+      "error": "发生错误"
     }
   },
   "ja": {
@@ -204,7 +216,8 @@
     "messages": {
       "bindSaved": "キーバインドを保存しました",
       "bindDeleted": "キーバインドを削除しました",
-      "bindsReset": "キーバインドをリセットしました"
+      "bindsReset": "キーバインドをリセットしました",
+      "error": "エラーが発生しました"
     }
   },
   "ko": {
@@ -220,7 +233,8 @@
     "messages": {
       "bindSaved": "키 바인드가 저장됨",
       "bindDeleted": "키 바인드가 삭제됨",
-      "bindsReset": "키 바인드가 초기화됨"
+      "bindsReset": "키 바인드가 초기화됨",
+      "error": "에러가 발생했습니다"
     }
   }
 }
