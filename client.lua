@@ -95,7 +95,8 @@ local function buildBind(bind)
             for _, arg in ipairs(bindValue.args or {}) do
                 args[#args + 1] = arg
             end
-            exports[bindValue.resource][bindValue.export](unpack(args))
+            local export = bindValue.export:split(':')
+            exports[export[1]][export[2]](unpack(args))
         end
     end
 

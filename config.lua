@@ -25,9 +25,9 @@ Config.Keys = {
             while not HasAnimDictLoaded('ai_gestures@gen_female@standing@silent') do
                 Wait(100)
             end
-            TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_flirty_greet_r_001', 1.0, 1.0, -1, 1, 0, false, false, false, 0, true)
+            TaskPlayAnim(PlayerPedId(), 'ai_gestures@gen_female@standing@silent', 'silent_flirty_greet_r_001', 1.0, 1.0, -1, 31, 0, false, false, false, 0, true)
             RemoveAnimDict('ai_gestures@gen_female@standing@silent')
-            Wait(5000)
+            Wait(1300)
             ClearPedTasks(PlayerPedId())
         end,
         wait = 1000,
@@ -127,11 +127,15 @@ Config.actionsToBind = {
         ['Reload skin'] = 'rc' -- If you need to pass args to the command just add them on the same line
     },
     -- client exports only, to trigger server exports, use TriggerServerEvent then trigger the export from the server
+    -- if the export is example_resource.test() then the value to pass is example_resource:test
     exports = {
-        ['test'] = {
-            export = 'moro_keybinds:test',
-            args = {1, 2, 3}
-        }
+        ['print'] = {
+            export = 'cmd_ped:test',
+            args = { 1, 2, 3 }
+        },
+        ['prout'] = {
+            export = 'cmd_ped:prout',
+        },
     }
 
 }
