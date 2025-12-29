@@ -17,12 +17,15 @@ local function isValidBind(bindName, bindValue)
 end
 
 Citizen.CreateThread(function()
-    jo.database.addTable('moro_keybinds', [[id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    char_id INT NOT NULL DEFAULT 0,
-    bind_name VARCHAR(50) NOT NULL DEFAULT '',
-    bind_key VARCHAR(50) NOT NULL DEFAULT '',
-    bind_value TEXT NOT NULL DEFAULT '',
-    UNIQUE KEY unique_char_bind (char_id, bind_key)]])
+    jo.database.addTable('moro_keybinds', [[
+        char_id INT NOT NULL DEFAULT 0,
+        bind_name VARCHAR(50) NOT NULL DEFAULT '',
+        bind_key VARCHAR(50) NOT NULL DEFAULT '',
+        bind_value TEXT NOT NULL DEFAULT '',
+        bind_type VARCHAR(50) NOT NULL DEFAULT '',
+        bind_resource VARCHAR(50),
+        UNIQUE KEY unique_char_bind (char_id, bind_key)
+    ]])
     
     local binds = MySQL.query.await('SELECT * FROM moro_keybinds')
     for _, v in ipairs(binds) do
