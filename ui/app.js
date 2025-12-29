@@ -1,5 +1,4 @@
 const { createApp, nextTick } = Vue;
-import locales from './locales.json';
 createApp({
     data() {
         return {
@@ -7,7 +6,7 @@ createApp({
             visible: false,
             binds: [],
             actions: [],
-            locales,
+            locales: {},
             locale: 'en', // change this to change the locale ONLY IN DEVMODE
             translations: {},
             fallbackTranslations: {},
@@ -19,9 +18,10 @@ createApp({
             this.applyLocale()
         }
     },
-    mounted() {
+    async mounted() {
         if (this.devMode) {
             this.visible = true;
+            await this.loadLocalesFromResource();
             this.actions = [
                 { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
                 { label: 'Reload skin', value: 'rc', type: 'command' },
@@ -48,6 +48,20 @@ createApp({
         },
     },
     methods: {
+        async loadLocalesFromResource() {
+            try {
+                const response = await fetch('../locales.json');
+                if (!response.ok) {
+                    return;
+                }
+                const locales = await response.json();
+                if (locales && typeof locales === 'object') {
+                    this.locales = locales;
+                }
+            } catch (error) {
+                console.warn('Failed to load locales.json', error);
+            }
+        },
         applyLocale() {
             this.translations = this.locales?.[this.locale] ?? {}
             this.fallbackTranslations = this.locales?.en ?? {}
@@ -91,9 +105,12 @@ createApp({
                     this.actions = message.actions || [];
                     this.binds = (message.binds || []).map((bind) => this.normalizeBind(bind));
                     if (message.locales) {
-                        this.translations = message.locales[this.locale] || {};
-                        this.fallbackTranslations = message.locales.en || {};
+                        this.locales = message.locales;
                     }
+                    if (message.locale) {
+                        this.locale = message.locale;
+                    }
+                    this.applyLocale();
                     this.visible = true;
                     this.pendingChanges = false;
                     break;
@@ -115,6 +132,7 @@ createApp({
             bind.selectedAction = '';
             bind.bind_name = '';
             bind.bind_value = '';
+            bind.bind_type = '';
             this.pendingChanges = true;
         },
         async resetBinds() {
@@ -122,6 +140,7 @@ createApp({
                 bind.selectedAction = '';
                 bind.bind_name = '';
                 bind.bind_value = '';
+                bind.bind_type = '';
             });
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:resetBinds`, {
                 method: 'POST',
@@ -135,6 +154,7 @@ createApp({
                     bind_key: bind.bind_key,
                     bind_name: bind.bind_name,
                     bind_value: bind.bind_value,
+                    bind_type: bind.bind_type,
                 }));
             await fetch(`https://${GetParentResourceName()}/moro_keybinds:saveBinds`, {
                 method: 'POST',

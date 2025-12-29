@@ -49,6 +49,10 @@ local function getActionType(bind)
     if commandAction and type(bindValue) == 'string' and bindValue == commandAction then
         return 'command'
     end
+    local exportAction = Config.actionsToBind.exports[bind.bind_name]
+    if exportAction and type(bindValue) == 'table' and bindValue.event == exportAction.event then
+        return 'export'
+    end
     return nil
 end
 
@@ -87,7 +91,11 @@ local function buildBind(bind)
         end
     elseif actionType == 'export' then
         callback = function()
-            exports[bindValue.resource][bindValue.export](unpack(bindValue.args))
+            local args = {}
+            for _, arg in ipairs(bindValue.args or {}) do
+                args[#args + 1] = arg
+            end
+            exports[bindValue.resource][bindValue.export](unpack(args))
         end
     end
 

@@ -126,6 +126,7 @@ Config.actionsToBind = {
     commands = {
         ['Reload skin'] = 'rc' -- If you need to pass args to the command just add them on the same line
     },
+    -- client exports only, to trigger server exports, use TriggerServerEvent then trigger the export from the server
     exports = {
         ['test'] = {
             export = 'moro_keybinds:test',

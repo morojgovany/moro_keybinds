@@ -1,37 +1,98 @@
-# Moro_Keybinds
+Simple RedM key binding script. It lets you bind keys to actions (commands, client/server events, or callbacks) with security checks and persistent storage.
 
-## *Simple key binding script for redm*
-It binds unused redm keys to events, commands or any callback function.
+## Features
+- Default key binds for all players.
+- Per-player customizable binds via UI.
+- Supported actions:
+  - commands (ExecuteCommand)
+  - client events (TriggerEvent)
+  - server events (TriggerServerEvent)
+  - local callbacks defined in `config.lua`
+  - exports from other resources
+- Security: disallows non-whitelisted binds and cleans them on restart.
+- Database persistence (table auto-created if missing).
+- Per-key anti-spam delay.
+- Dev mode for live restarts.
+- Configurable UI open command.
+- Multi-language support via `locales.json`.
 
-## Description
-- Assign actions to default keys for all players
-- Allow players to bind actions to customizable keys
-- Trigger commands, client events or server events (list in config)
-- Security checks to prevent players from binding forbidden events or commands to keys (on every restart & bind save)
-- Auto creates table in database if not exists
-- Persistent bind data (saved in database)
-- Pass arguments to commands or events
-- Use dev mode to restart the script live
-- Use the command `keybinds` to open the ui (can be changed in config)
+## Installation
+1. Put the folder in `resources/`.
+2. Add the resource to your `server.cfg`:
+   ```cfg
+   ensure moro_keybinds
+   ```
 
-## *Installation*
-- Put the folder in your resources folder
-- Add `ensure moro_keybinds` to your server.cfg
+## Configuration (config.lua)
+Open `config.lua` and adjust the sections below.
 
-## *Config*
-- Open `config.lua` and add your keybinds callbacks
-- Use as many keybinds as you want but use carefully it can conflict with other scripts
-- You can add a wait time after the callback to prevent spam
-- Config.Keys are the keys that are binded by default for all players
-- Config.customizableKeys are the keys that the player can assign to actions, be careful of conflicts with other scripts & remember that depends on the keyboard layout of the player
-- Change the command `keybinds` to open the ui in the config
-- Change the locale in the config
-- Assign any action to any key in the config
-- List authorized actions in the config
+### General settings
+- `Config.openCommand`: command to open the UI (default `keybinds`).
+- `Config.Locale`: default locale (e.g. `en`, `fr`).
+- `Config.devMode`: `true` to allow live restarts.
 
-## *Translations*
-- Open `locales.json` and add your translations
-- You can add as many languages as you want
-*Translations were IA generated, please review and correct any errors*
+### Default keys (all players)
+`Config.Keys` defines keys that are always active for everyone.
+Each entry contains:
+- `hash`: key hash (Windows Virtual Key Code).
+- `callback`: function executed on press.
+- `wait`: delay (ms) before it can be pressed again.
+- `trigger`: `keyUp` or `keyDown`.
 
-### **:warning: Note: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout.**
+Example:
+```lua
+Config.Keys = {
+  K = {
+    hash = 0x4B,
+    callback = function()
+      ExecuteCommand('rc')
+    end,
+    wait = 1000,
+    trigger = 'keyUp',
+  },
+}
+```
+
+### Customizable keys (per player)
+`Config.customizableKeys` lists keys players can assign in the UI.
+- Use `hash`, `wait`, `trigger` as above.
+- Display order is defined by:
+  - `Config.customizableKeys`
+  - `Config.customizableKeysOrder`
+
+### Whitelisted actions
+`Config.actionsToBind` defines what players are allowed to bind.
+- `clientEvents`: triggered via `TriggerEvent`.
+- `serverEvents`: triggered via `TriggerServerEvent`.
+- `commands`: executed via `ExecuteCommand` (no `/`).
+
+Example:
+```lua
+Config.actionsToBind = {
+  clientEvents = {
+    ['Notification'] = {
+      event = 'moro_notifications:TipRight',
+      args = {'test', 5000}
+    },
+  },
+  serverEvents = {
+    ['test'] = {
+      event = '',
+      args = {}
+    }
+  },
+  commands = {
+    ['Reload skin'] = 'rc'
+  },
+}
+```
+
+## Translations (locales.json)
+- Add/edit languages in `locales.json`.
+- Set `Config.Locale` accordingly.
+
+## Important notes
+- Key hashes use Windows Virtual Key Codes: results depend on the player’s keyboard layout.
+- If you add customizable binds, check for conflicts with other scripts.
+
+Useful link for hashes: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
