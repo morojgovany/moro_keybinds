@@ -1,4 +1,4 @@
-local content, resource, modPath = jo.file.read('moro_keybinds.locales')
+local content = LoadResourceFile('moro_keybinds', 'locales.json')
 local locales = json.decode(content)
 local function isValidBind(bindName, bindValue)
     local clientAction = Config.actionsToBind.clientEvents[bindName]

@@ -85,6 +85,10 @@ local function buildBind(bind)
         callback = function()
             ExecuteCommand(bindValue)
         end
+    elseif actionType == 'export' then
+        callback = function()
+            exports[bindValue.resource][bindValue.export](unpack(bindValue.args))
+        end
     end
 
     return {
@@ -163,6 +167,13 @@ local function getActionsForUi()
         actions[#actions + 1] = {
             label = name,
             type = 'command',
+            value = value,
+        }
+    end
+    for name, value in pairs(Config.actionsToBind.exports) do
+        actions[#actions + 1] = {
+            label = name,
+            type = 'export',
             value = value,
         }
     end

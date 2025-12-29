@@ -126,5 +126,11 @@ Config.actionsToBind = {
     commands = {
         ['Reload skin'] = 'rc' -- If you need to pass args to the command just add them on the same line
     },
+    exports = {
+        ['test'] = {
+            export = 'moro_keybinds:test',
+            args = {1, 2, 3}
+        }
+    }
 
 }
