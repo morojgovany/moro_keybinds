@@ -22,8 +22,6 @@ Citizen.CreateThread(function()
         bind_name VARCHAR(50) NOT NULL DEFAULT '',
         bind_key VARCHAR(50) NOT NULL DEFAULT '',
         bind_value TEXT NOT NULL DEFAULT '',
-        bind_type VARCHAR(50) NOT NULL DEFAULT '',
-        bind_resource VARCHAR(50),
         UNIQUE KEY unique_char_bind (char_id, bind_key)
     ]])
     
