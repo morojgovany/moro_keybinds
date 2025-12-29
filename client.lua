@@ -250,7 +250,7 @@ RegisterNUICallback('moro_keybinds:resetBinds', function(data, cb)
     cb('ok')
 end)
 
-RegisterCommand('keybinds', function()
+RegisterCommand(Config.openCommand, function()
     TriggerEvent('moro_keybinds:openMenu')
 end)
 

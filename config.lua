@@ -1,5 +1,6 @@
 Config = {}
-Config.Locale = 'en'
+Config.openCommand = 'keybinds' -- the command to open the ui
+Config.Locale = 'en' -- set the default locale
 Config.devMode = false -- set to true if you want to restart the script live
 -- REMEMBER: the hash of the rawkeys uses OS hashes, related to your keyboard layout. So it can be different depending of your players keyboard layout. And it can lead to conflicts with other scripts.
 -- list of hash of raw keys https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
@@ -86,6 +87,7 @@ Config.customizableKeys = {
         trigger = 'keyUp',
     },
 }
+-- The order of the customizable keys is the order in which they will be displayed in the ui
 Config.customizableKeysOrder = {
     'NUMPAD 1',
     'NUMPAD 2',
@@ -122,7 +124,7 @@ Config.actionsToBind = {
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     -- Remove the / used before the command name in chat
     commands = {
-        ['Reload skin'] = 'rc'
+        ['Reload skin'] = 'rc' -- If you need to pass args to the command just add them on the same line
     },
 
 }
