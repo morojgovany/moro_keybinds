@@ -65,6 +65,7 @@ Config.Keys = {
 - `clientEvents`: triggered via `TriggerEvent`.
 - `serverEvents`: triggered via `TriggerServerEvent`.
 - `commands`: executed via `ExecuteCommand` (no `/`).
+- `exports`: executed via `exports`.
 
 Example:
 ```lua
@@ -84,6 +85,12 @@ Config.actionsToBind = {
   commands = {
     ['Reload skin'] = 'rc'
   },
+  exports = {
+    ['print'] = {
+      export = 'test:test',
+      args = { 1, 2, 3 }
+    },
+  }
 }
 ```
 

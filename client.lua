@@ -96,7 +96,8 @@ local function buildBind(bind)
                 args[#args + 1] = arg
             end
             local export = bindValue.export:split(':')
-            exports[export[1]][export[2]](unpack(args))
+            local exportResource = exports[export[1]]
+            exportResource[export[2]](exportResource, unpack(args))
         end
     end
 
