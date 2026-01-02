@@ -140,20 +140,34 @@ local function handleBinds(binds, cooldowns)
 end
 
 Citizen.CreateThread(function()
+    if not IsLoadingScreenVisible() and not IsScreenFadedOut() then
+        repeat Wait(500) until not IsLoadingScreenVisible() and not IsScreenFadedOut()
+    end
     local keyCooldowns = {}
     while true do
-        Wait(1)
-        handleBinds(Config.Keys, keyCooldowns)
+        local sleep = 1        
+        if #Config.Keys > 0 then
+            handleBinds(Config.Keys, keyCooldowns)
+        else
+            sleep = 1000
+        end
+        Wait(sleep)
     end
 end)
 
 Citizen.CreateThread(function()
+    if not IsLoadingScreenVisible() and not IsScreenFadedOut() then
+        repeat Wait(500) until not IsLoadingScreenVisible() and not IsScreenFadedOut()
+    end
     local keyCooldowns = {}
     while true do
-        Wait(1)
-        if next(playerBinds) ~= nil then
+        local sleep = 1
+        if #playerBinds > 0 then
             handleBinds(playerBinds, keyCooldowns)
+        else
+            sleep = 1000
         end
+        Wait(sleep)
     end
 end)
 
