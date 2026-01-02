@@ -1,6 +1,9 @@
 local playerBinds = {}
 local localesCache = nil
 local unpack = table.unpack or unpack
+local playerBindsThreadActive = false
+local playerBindsThreadStarted = false
+local configKeysThreadStarted = false
 
 local function loadLocales()
     if localesCache then
@@ -139,37 +142,50 @@ local function handleBinds(binds, cooldowns)
     end
 end
 
-Citizen.CreateThread(function()
+local function waitForLoad()
     if not IsLoadingScreenVisible() and not IsScreenFadedOut() then
         repeat Wait(500) until not IsLoadingScreenVisible() and not IsScreenFadedOut()
     end
-    local keyCooldowns = {}
-    while true do
-        local sleep = 1        
-        if #Config.Keys > 0 then
-            handleBinds(Config.Keys, keyCooldowns)
-        else
-            sleep = 1000
-        end
-        Wait(sleep)
-    end
-end)
+end
 
-Citizen.CreateThread(function()
-    if not IsLoadingScreenVisible() and not IsScreenFadedOut() then
-        repeat Wait(500) until not IsLoadingScreenVisible() and not IsScreenFadedOut()
+local function startConfigKeysThread()
+    if configKeysThreadStarted or #Config.Keys == 0 then
+        return
     end
-    local keyCooldowns = {}
-    while true do
-        local sleep = 1
-        if #playerBinds > 0 then
-            handleBinds(playerBinds, keyCooldowns)
-        else
-            sleep = 1000
+
+    configKeysThreadStarted = true
+    Citizen.CreateThread(function()
+        waitForLoad()
+        local keyCooldowns = {}
+        while true do
+            handleBinds(Config.Keys, keyCooldowns)
+            Wait(1)
         end
-        Wait(sleep)
+    end)
+end
+
+local function startPlayerBindsThread()
+    if playerBindsThreadStarted then
+        playerBindsThreadActive = true
+        return
     end
-end)
+
+    playerBindsThreadStarted = true
+    playerBindsThreadActive = true
+    Citizen.CreateThread(function()
+        waitForLoad()
+        local keyCooldowns = {}
+        while playerBindsThreadActive do
+            if next(playerBinds) then
+                handleBinds(playerBinds, keyCooldowns)
+            end
+            Wait(1)
+        end
+        playerBindsThreadStarted = false
+    end)
+end
+
+startConfigKeysThread()
 
 local function getActionsForUi()
     local actions = {}
@@ -252,6 +268,11 @@ AddEventHandler('moro_keybinds:syncBinds', function(binds)
             playerBinds[v.bind_key] = bind
         end
     end
+    if next(playerBinds) then
+        startPlayerBindsThread()
+    else
+        playerBindsThreadActive = false
+    end
 end)
 
 RegisterNetEvent('moro_keybinds:deleteBind')
@@ -262,6 +283,7 @@ end)
 RegisterNetEvent('moro_keybinds:resetBinds')
 AddEventHandler('moro_keybinds:resetBinds', function()
     playerBinds = {}
+    playerBindsThreadActive = false
 end)
 
 RegisterNUICallback('moro_keybinds:closeMenu', function(data, cb)
