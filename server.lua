@@ -35,7 +35,7 @@ Citizen.CreateThread(function()
         local bindValue = ok and decoded or v.bind_value
         if not isValidBind(v.bind_name, bindValue) then
             MySQL.update.await('DELETE FROM moro_keybinds WHERE char_id = ? AND bind_key = ?', {v.char_id, v.bind_key})
-            print('Bind ' .. v.bind_name .. ' => ' .. json.encode(v.bind_value) .. ' from character ' .. jo.framework:getRPName(v.char_id) .. ' deleted, check for possible cheat.')
+            print('Bind ' .. v.bind_name .. ' => ' .. json.encode(v.bind_value) .. ' from character ID ' .. v.char_id .. ' deleted, check for possible cheat.')
         end
     end
 end)

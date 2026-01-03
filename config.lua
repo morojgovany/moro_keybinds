@@ -106,7 +106,7 @@ Config.actionsToBind = {
     -- Events that can be binded to the customizable keys (triggered by TriggerEvent)
     clientEvents = {
         ['Notification'] = {
-            event = 'moro_notifications:TipRight',
+            event = 'vorp:TipRight',
             args = {
                 'test',
                 5000
@@ -115,27 +115,14 @@ Config.actionsToBind = {
     },
 
     -- Server events that can be binded to the customizable keys (triggered by TriggerServerEvent)
-    serverEvents = {
-        ['test'] = {
-            event = '',
-            args = {}
-        }
-    },
+    serverEvents = {},
     -- Commands that can be binded to the customizable keys (triggered by ExecuteCommand)
     -- Remove the / used before the command name in chat
     commands = {
-        ['Reload skin'] = 'rc' -- If you need to pass args to the command just add them on the same line
+        ['Reload skin'] = 'rc', -- If you need to pass args to the command just add them on the same line
     },
     -- client exports only, to trigger server exports, use TriggerServerEvent then trigger the export from the server
     -- if the export is example_resource.test() then the value to pass is example_resource:test
-    exports = {
-        ['print'] = {
-            export = 'cmd_ped:test',
-            args = { 1, 2, 3 }
-        },
-        ['prout'] = {
-            export = 'cmd_ped:prout',
-        },
-    }
+    exports = {}
 
 }

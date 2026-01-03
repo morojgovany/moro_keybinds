@@ -148,22 +148,6 @@ local function waitForLoad()
     end
 end
 
-local function startConfigKeysThread()
-    if configKeysThreadStarted or #Config.Keys == 0 then
-        return
-    end
-
-    configKeysThreadStarted = true
-    Citizen.CreateThread(function()
-        waitForLoad()
-        local keyCooldowns = {}
-        while true do
-            handleBinds(Config.Keys, keyCooldowns)
-            Wait(1)
-        end
-    end)
-end
-
 local function startPlayerBindsThread()
     if playerBindsThreadStarted then
         playerBindsThreadActive = true
@@ -185,7 +169,18 @@ local function startPlayerBindsThread()
     end)
 end
 
-startConfigKeysThread()
+
+if Config.Keys then -- load keys thread only if keys are defined
+    Citizen.CreateThread(function()
+        waitForLoad()
+        local keyCooldowns = {}
+        while true do
+            handleBinds(Config.Keys, keyCooldowns)
+            Wait(1)
+        end
+    end)
+end
+
 
 local function getActionsForUi()
     local actions = {}
