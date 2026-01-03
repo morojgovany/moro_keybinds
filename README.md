@@ -23,6 +23,13 @@ Simple RedM key binding script. It lets you bind keys to actions (commands, clie
    ensure moro_keybinds
    ```
 
+## Database structure
+- char_id: the character id
+- bind_name: the name of the bind
+- bind_key: the key of the bind
+- bind_value: the value of the bind
+*Primary key: char_id, bind_name*
+
 ## Configuration (config.lua)
 Open `config.lua` and adjust the sections below.
 
