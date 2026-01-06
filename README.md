@@ -79,7 +79,7 @@ Example:
 Config.actionsToBind = {
   clientEvents = {
     ['Notification'] = {
-      event = 'moro_notifications:TipRight',
+      event = 'vorp:TipRigh',
       args = {'test', 5000}
     },
   },
