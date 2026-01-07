@@ -14,7 +14,7 @@ local function isValidBind(bindName, bindValue)
         return true
     end
     local exportAction = Config.actionsToBind.exports[bindName]
-    if exportAction and type(bindValue) == 'table' and bindValue.event == exportAction.event then
+    if exportAction and type(bindValue) == 'table' and bindValue.export == exportAction.export then
         return true
     end
     return false

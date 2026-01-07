@@ -23,7 +23,7 @@ createApp({
             this.visible = true;
             await this.loadLocalesFromResource();
             this.actions = [
-                { label: 'Notification', value: 'moro_notifications:TipRight', type: 'event' },
+                { label: 'Notification', value: { event: 'vorp:TipRight', args: ['test', 5000] }, type: 'clientEvent' },
                 { label: 'Reload skin', value: 'rc', type: 'command' },
             ];
             this.binds = [

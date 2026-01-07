@@ -53,7 +53,7 @@ local function getActionType(bind)
         return 'command'
     end
     local exportAction = Config.actionsToBind.exports[bind.bind_name]
-    if exportAction and type(bindValue) == 'table' and bindValue.event == exportAction.event then
+    if exportAction and type(bindValue) == 'table' and bindValue.export == exportAction.export then
         return 'export'
     end
     return nil
