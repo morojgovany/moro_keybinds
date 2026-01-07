@@ -1,4 +1,7 @@
 local content = LoadResourceFile('moro_keybinds', 'locales.json')
+if not content then
+    error(resourceName .. ': locales.json not found')
+end
 local locales = json.decode(content)
 local function isValidBind(bindName, bindValue)
     local clientAction = Config.actionsToBind.clientEvents[bindName]

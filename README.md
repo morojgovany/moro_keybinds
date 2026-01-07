@@ -1,4 +1,5 @@
-Simple RedM key binding script. It lets you bind keys to actions (commands, client/server events, or callbacks) with security checks and persistent storage.
+# moro_keybinds
+Complete RedM key binding script. It lets you bind keys to actions (commands, client/server events, or callbacks) with security checks and persistent storage.
 
 ## Features
 - Default key binds for all players.
@@ -22,6 +23,7 @@ Simple RedM key binding script. It lets you bind keys to actions (commands, clie
    ```cfg
    ensure moro_keybinds
    ```
+3. To open, use the command `/keybinds` or the one you specified in Config.command.
 
 ## Database structure
 - char_id: the character id
@@ -52,7 +54,7 @@ Config.Keys = {
   K = {
     hash = 0x4B,
     callback = function()
-      ExecuteCommand('rc')
+      ExecuteCommand('mycommand')
     end,
     wait = 1000,
     trigger = 'keyUp',
@@ -74,29 +76,35 @@ Config.Keys = {
 - `commands`: executed via `ExecuteCommand` (no `/`).
 - `exports`: executed via `exports`.
 
-Example:
+Examples:
 ```lua
 Config.actionsToBind = {
   clientEvents = {
-    ['Notification'] = {
-      event = 'vorp:TipRigh',
-      args = {'test', 5000}
-    },
+     ['Chat message'] = {
+      event = 'chat:addMessage',
+      args = {
+        {
+          color = { 255, 0, 0},
+          multiline = true,
+          args = {"Me", "This is a chat client event test"}
+        }
+      }
+    }
   },
   serverEvents = {
     ['test'] = {
-      event = '',
-      args = {}
+      event = 'myresource:myevent',
+      args = { 1, 2, 3 }
     }
   },
   commands = {
-    ['Reload skin'] = 'rc'
+    ['My command'] = 'mycommand'
   },
   exports = {
-    ['print'] = {
-      export = 'test:test',
+    ['My export'] = {
+      export = 'myresource:myexport',
       args = { 1, 2, 3 }
-    },
+    }
   }
 }
 ```
